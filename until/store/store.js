@@ -11,7 +11,7 @@ const reducer = (state,action)=>{
     }
 }
 export const File = props => { 
-    const [state, dispatch] = useReducer(reducer,{fileList:[],uploaded:false,fromType:''});
+    const [state, dispatch] = useReducer(reducer,{fileList:[],uploaded:false,fromType:'',toType:''});
     return (
         <FileContext.Provider value={{state,dispatch}}>
             {props.children}
@@ -22,3 +22,4 @@ export const File = props => {
 
 export const BtnSizeContext = createContext({});
 export const ConfigContext = createContext({});
+export const GlobalContext = createContext({});

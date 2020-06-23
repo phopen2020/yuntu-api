@@ -66,6 +66,8 @@ function getFileType(fileTitle) {
                 || title.endsWith(".jsp")) {
 
             type = "html";
+        } else {
+            return 'unknown';
         }
     }
     return type;

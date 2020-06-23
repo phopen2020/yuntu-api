@@ -1,6 +1,7 @@
-import React, { useState, useRef, useContext } from 'react';
-import { FileContext, UPLOAD_FILE, BtnSizeContext } from '../../until/store/store';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import { FileContext, UPLOAD_FILE, BtnSizeContext, GlobalContext } from '../../until/store/store';
 import DropDownList from '../../components/DropDownList';
+import Router from 'next/router';
 const Introduce = () => {
     const { state, dispatch } = useContext(FileContext);
     const [btnSize, setBtnSize] = useState({});
@@ -8,7 +9,18 @@ const Introduce = () => {
     const inputFile = useRef(null);
     const leftBtn = useRef(null);
     const rightBtn = useRef(null);
-    
+    const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
+    useEffect(()=>{
+        if(!state.uploaded){
+            Router.push('/');
+        }
+    },[state.uploaded]);
+    useEffect(()=>{
+        if(!isShowDropDownMenu){
+            setDropDown(false);
+        }
+    },[isShowDropDownMenu]);
+
     if(state.uploaded){
         return null;
     }
@@ -49,7 +61,22 @@ const Introduce = () => {
             link:"API文档"
         }
     ];
-    function dropDownClick(){
+    const btnList = [
+        {
+            id:"01",
+            icon:"\ue638",
+            title:"从我的电脑"
+        },
+        {
+            id:"02",
+            icon:"\ue79c",
+            title:"通过URL"
+        }
+    ]
+
+    function dropDownClick(e){
+        e.stopPropagation();
+        handleOpenOne();
         setDropDown(!dropDown);
         setBtnSize({
             width: leftBtn.current.offsetWidth + rightBtn.current.offsetWidth,
@@ -66,11 +93,11 @@ const Introduce = () => {
                         选择文件
                         <input ref={inputFile} className="hide" type="file" onChange={() => dispatch({type:UPLOAD_FILE,state:{fileList:[inputFile.current.files[0]],uploaded:true}})}/>
                     </div>
-                    <span ref={rightBtn} className="iconfont upload-options" onClick={() => dropDownClick() }>&#xe656;</span>
+                    <span ref={rightBtn} className="iconfont upload-options" onClick={(e) => dropDownClick(e)}>&#xe656;</span>
                         {
                             dropDown 
                             ? (
-                                <BtnSizeContext.Provider value={btnSize}>
+                                <BtnSizeContext.Provider value={{btnSize,btnList}}>
                                     <DropDownList /> 
                                 </BtnSizeContext.Provider>
                             ) 

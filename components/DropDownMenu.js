@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ConfigContext } from '../until/store/store';
+import { ConfigContext, GlobalContext } from '../until/store/store';
 const DropDownMenu = () => {
     const menuList = useContext(ConfigContext);
     const [navType, setNavType] = useState("document");
     const [document,setDocument] = useState([]);
     const [image,setImage] = useState([]);
     const [extra,setExtra] = useState([]);
+    const {handleOpenOne} = useContext(GlobalContext);
    
     useEffect(()=>{
         switch(menuList.type){
@@ -24,17 +25,21 @@ const DropDownMenu = () => {
     },[menuList.type]);
     const yuntu = 'yuntuApi';
     const namespace = 'introduce';
+    const handleMenuClick = (e) => {
+        e.stopPropagation();
+        handleOpenOne();
+    }
     function type(){
         let type;
         switch(navType){
             case "document":
-                type = document.map((item)=><span className="list-items" onClick={()=>menuList.getType(item,menuList.type)} key={yuntu + namespace + item}>{item}</span>);
+                type = document.map((item)=><span className="list-items" onClick={(e)=>menuList.getType(item,menuList.type,e)} key={yuntu + namespace + item}>{item}</span>);
                 return type;
             case "image":
-                type = image.map((item)=><span className="list-items" onClick={()=>menuList.getType(item,menuList.type)} key={yuntu + namespace + item}>{item}</span>);
+                type = image.map((item)=><span className="list-items" onClick={(e)=>menuList.getType(item,menuList.type,e)} key={yuntu + namespace + item}>{item}</span>);
                 return type;
             case "extra":
-                type = extra.map((item)=><span className="list-items" onClick={()=>menuList.getType(item,menuList.type)} key={yuntu + namespace + item}>{item}</span>);
+                type = extra.map((item)=><span className="list-items" onClick={(e)=>menuList.getType(item,menuList.type,e)} key={yuntu + namespace + item}>{item}</span>);
                 return type;
             default:
                 type = null;
@@ -42,7 +47,7 @@ const DropDownMenu = () => {
         }
     }
     return (
-        <div className="container">
+        <div className="container" onClick={(e)=>handleMenuClick(e)}>
             <div className="menu">
                 <ul className="menu-nav">
                     {document.length !== 0 ? <li className="nav-items" onMouseEnter={()=>setNavType("document")}>文档</li> : null}
@@ -95,6 +100,7 @@ const DropDownMenu = () => {
                     font-size:12px;
                     text-align:center;
                     box-sizing:border-box;
+                    line-height:12px;
                 }
                 .menu-list .list-items:hover{
                     background:#2a2a2a;

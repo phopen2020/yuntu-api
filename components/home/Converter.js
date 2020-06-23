@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import DropDownMenu from '../../components/DropDownMenu'
 import { newApiConfig } from '../../until/newApiConfig'
-import { ConfigContext, FileContext } from '../../until/store/store'
+import { ConfigContext, FileContext, GlobalContext } from '../../until/store/store'
 import Router, { withRouter } from 'next/router';
 const Converter = ({router}) => {
     const bgColor = "#202020";
@@ -18,8 +18,15 @@ const Converter = ({router}) => {
         {title:"文件转换",describe:"九云图是一个在线文件转换器。我们确实支持几乎所有文档，电子书，档案，图像，电子表格或演示文稿格式。要开始使用，请使用下面的按钮并选择要从您的计算机转换的文件。"}
     ]
     const { state, dispatch } = useContext(FileContext);
-
     const [finalType,setFinalType] = useState('');
+    const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
+
+    useEffect(()=>{
+        if(!isShowDropDownMenu){
+            setFromDropDown(false);
+            setToDropDown(false);
+        }
+    },[isShowDropDownMenu]);
     useEffect(()=>{
         setFromSelected(fromType!='' ? true : false);
         setToList(newApiConfig.getConvertTo(fromType));
@@ -27,10 +34,15 @@ const Converter = ({router}) => {
         setFinalType(fromType + (toType ? '-to-' + toType : ''));
     },[fromType,toType]);
     useEffect(()=>{
-        if(state.fromType){
+        if(state.fromType && state.fromType!=="UNKNOWN"){
             setFromType(state.fromType);
         }
     },[state.fromType]);
+    useEffect(()=>{
+        if(state.toType){
+            setToType(state.toType);
+        }
+    },[state.toType]);
     useEffect(()=>{
         Router.push({pathname:'/',query:{finalType}},'/'+finalType);
     },[finalType])
@@ -44,24 +56,31 @@ const Converter = ({router}) => {
         }
     },[router])
 
-    const getType = (type,option) => {
+    const getType = (type,option,e) => {
+        e.stopPropagation();
         switch(option){
             case 'from':
                 setFromType(type);
+                setFromDropDown(false);
                 break;
             case 'to':
                 setToType(type);
+                setToDropDown(false);
                 break;
             default:
                 break;
         }
     }
 
-    function fromBtnClick(){
+    function fromBtnClick(e){
+        e.stopPropagation();
+        handleOpenOne();
         setToDropDown(false);
         return setFromDropDown(!fromDropDown);
     }
-    function toBtnClick(){
+    function toBtnClick(e){
+        e.stopPropagation();
+        handleOpenOne();
         setFromDropDown(false);
         if(fromSelected){
             setToDropDown(!toDropDown);
@@ -84,7 +103,7 @@ const Converter = ({router}) => {
                 <div className="converter-right">
                     <ul className="converter-control">
                         <li className="control-items">转换</li>
-                        <li className="control-items control-btn" onClick={()=>fromBtnClick()}>
+                        <li className="control-items control-btn" onClick={(e)=>fromBtnClick(e)}>
                             {fromType ? fromType : "..."}
                             <span className="iconfont">&#xe656;</span>
                             <ConfigContext.Provider value={{fromList,type:'from',getType}}>
@@ -96,7 +115,7 @@ const Converter = ({router}) => {
                             </ConfigContext.Provider>
                         </li>
                         <li className="control-items">至</li>
-                        <li className="control-items control-btn" onClick={()=>toBtnClick()}>
+                        <li className="control-items control-btn" onClick={(e)=>toBtnClick(e)}>
                             {toType ? toType : "..."}
                             <span className="iconfont">&#xe656;</span>
                             <ConfigContext.Provider value={{toList,type:'to',getType}}>
@@ -122,6 +141,7 @@ const Converter = ({router}) => {
                     display:flex;
                     align-items:center;
                     width:1140px;
+                    min-height:220px;
                     box-sizing:border-box;
                     padding:60px 27px;
                     margin-left:auto;

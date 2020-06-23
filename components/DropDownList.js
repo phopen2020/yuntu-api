@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
 import { BtnSizeContext } from '../until/store/store';
 const DropDownList = () => {
-    const btnSize = useContext(BtnSizeContext);
+    const {btnSize,btnList} = useContext(BtnSizeContext);
+    const yuntu = 'yuntuApi';
+    const namespace = 'introduce';
     return (
         <div className="container">
             <ul className="list">
-                <li className="list-items">
-                    <span className="iconfont items-icon">&#xe638;</span>
-                    从我的电脑
-                </li>
-                <li className="list-items">
-                    <span className="iconfont items-icon">&#xe79c;</span>
-                    通过URL
-                </li>
+                {btnList.map((item)=>(
+                    <li className="list-items" key={yuntu + namespace + item.id + 'btnList'}>
+                        <span className="iconfont items-icon">{item.icon}</span>
+                        {item.title}
+                    </li>
+                ))}
             </ul>
             <style>{`
                 .list{

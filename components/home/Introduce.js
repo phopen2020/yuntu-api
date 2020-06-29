@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { FileContext, UPLOAD_FILE, BtnSizeContext, GlobalContext } from '../../until/store/store';
-import DropDownList from '../../components/DropDownList';
+import DropDownList from '../DropDownList';
 import Router from 'next/router';
 const Introduce = () => {
     const { state, dispatch } = useContext(FileContext);
@@ -84,6 +84,15 @@ const Introduce = () => {
             left: leftBtn.current.offsetLeft
         });
     }
+    function inputChange(file){
+        if(file){      //从下拉列表中选择文件
+            dispatch({type:UPLOAD_FILE,state:{fileList:[file],uploaded:true}});
+        }else{     //从按钮直接选择文件
+            dispatch({type:UPLOAD_FILE,state:{fileList:[inputFile.current.files[0]],uploaded:true}});
+        }
+        setDropDown(false);
+    }
+
     return (
         <div className="container">
             <section className="introduce">
@@ -91,13 +100,13 @@ const Introduce = () => {
                     <div ref={leftBtn} className="upload-btn">
                         <span className="iconfont">&#xe664;</span>
                         选择文件
-                        <input ref={inputFile} className="hide" type="file" onChange={() => dispatch({type:UPLOAD_FILE,state:{fileList:[inputFile.current.files[0]],uploaded:true}})}/>
+                        <input ref={inputFile} className="hide" type="file" onChange={() => inputChange()}/>
                     </div>
                     <span ref={rightBtn} className="iconfont upload-options" onClick={(e) => dropDownClick(e)}>&#xe656;</span>
                         {
                             dropDown 
                             ? (
-                                <BtnSizeContext.Provider value={{btnSize,btnList}}>
+                                <BtnSizeContext.Provider value={{btnSize,btnList,inputChange,isUploadBtn:true}}>
                                     <DropDownList /> 
                                 </BtnSizeContext.Provider>
                             ) 

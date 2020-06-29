@@ -1,16 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { BtnSizeContext } from '../until/store/store';
 const DropDownList = () => {
-    const {btnSize,btnList} = useContext(BtnSizeContext);
+    const {btnSize,btnList,inputChange,isUploadBtn} = useContext(BtnSizeContext);
+    const inputFile = useRef(null);
     const yuntu = 'yuntuApi';
     const namespace = 'introduce';
+
+    function itemClick(index,e){
+        e.stopPropagation();
+        switch(index){
+            case 1:
+                break;
+        }
+    }
+
     return (
         <div className="container">
             <ul className="list">
-                {btnList.map((item)=>(
-                    <li className="list-items" key={yuntu + namespace + item.id + 'btnList'}>
+                {btnList.map((item,index)=>(
+                    <li className="list-items" key={yuntu + namespace + item.id + 'btnList'} onClick={(e)=>itemClick(index,e)}>
                         <span className="iconfont items-icon">{item.icon}</span>
                         {item.title}
+                        {isUploadBtn&&index===0?<input ref={inputFile} className="hide" type="file" onChange={() => inputChange(inputFile.current.files[0])}/>:null}
                     </li>
                 ))}
             </ul>
@@ -40,6 +51,16 @@ const DropDownList = () => {
                     position:absolute;
                     left:20px;
                     font-size:15px;
+                }
+                .hide{
+                    overflow:hidden;
+                    position:absolute;
+                    right:0;
+                    top:10px;
+                    width:${btnSize.width}px;
+                    height:44px;
+                    opacity:0;
+                    filter:alpha(opacity=0);
                 }
             `}</style>
         </div>

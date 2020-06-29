@@ -2,9 +2,9 @@ import React , { useRef, useContext, useEffect, useState } from 'react';
 import { FileContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext } from '../../until/store/store';
 import { fileUntils } from '../../until/fileUntils';
 import { newApiConfig } from '../../until/newApiConfig';
-import DropDownList from '../../components/DropDownList';
-import DropDownMenu from '../../components/DropDownMenu';
-import Loading from '../../components/Loading';
+import DropDownList from '../DropDownList';
+import DropDownMenu from '../DropDownMenu';
+import Loading from '../Loading';
 const Upfile = () => {
     const bgColor = "#f9f9f9";
     const fontColor = "#202020";
@@ -26,8 +26,6 @@ const Upfile = () => {
     const [opacity,setOpacity] = useState(0.65);
     const [fileConfigList,setFileConfigList] = useState([]);
     const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
-    const [waiting,setWaiting] = useState(false);
-    const [finished,setFinished] = useState(false);
     const finishLeftBtn = useRef(null);
     const finishRightBtn = useRef(null);
     const [finishDropDown, setFinishDropDown] = useState(false);
@@ -56,6 +54,7 @@ const Upfile = () => {
                             unknownType:true,
                             toDropDown:false,
                             allowConfig:false,
+                            convertStatus:'init',
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
@@ -67,6 +66,7 @@ const Upfile = () => {
                             unknownType:false,
                             toDropDown:false,
                             allowConfig:false,
+                            convertStatus:'init',
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
@@ -138,17 +138,27 @@ const Upfile = () => {
     }
 
     function convertTo(){
-        fileConfigList.map((item)=>{
-            if(opacity===1){
+        if(opacity===1){
+            fileConfigList.map((item,index)=>{
+                if(index===0){
+                    item.convertStatus = 'waiting';
+                    setFileConfigList([...fileConfigList]);
+                    setTimeout(()=>{
+                        item.convertStatus = 'finished';
+                        setFileConfigList([...fileConfigList]);
+                    },2000);
+                }else if(index===1){
+                    item.convertStatus = 'waiting';
+                    setFileConfigList([...fileConfigList]);
+                    setTimeout(()=>{
+                        item.convertStatus = 'finished';
+                        setFileConfigList([...fileConfigList]);
+                    },5000);
+                }
                 console.log(state.fileList);
                 console.log(fileConfigList);
-                setWaiting(true);
-                setTimeout(()=>{
-                    setWaiting(false);
-                    setFinished(true);
-                },5000);
-            }
-        });
+            });
+        }
     }
     function convertSelect(index,e){
         e.stopPropagation();
@@ -198,6 +208,14 @@ const Upfile = () => {
             left: finishLeftBtn.current.offsetLeft
         });
     }
+    function inputChange(file){
+        if(file){   //从下拉列表中选择文件
+            dispatch({type:UPLOAD_FILE,state:{fileList:[...state.fileList,file],uploaded:true}});
+        }else{     //从按钮直接选择文件
+            dispatch({type:UPLOAD_FILE,state:{fileList:[...state.fileList,inputFile.current.files[0]],uploaded:true}});
+        }
+        setDropDown(false);
+    }
 
     return (
         <div className="container">
@@ -237,12 +255,12 @@ const Upfile = () => {
                                     : null
                                 }
                                 {
-                                    waiting
+                                    (fileConfigList[index]?fileConfigList[index].convertStatus==='waiting':false)
                                     ?<div className="item-wait"><span>Waiting</span><Loading /></div>
                                     :null
                                 }
                                 {
-                                    finished
+                                    (fileConfigList[index]?fileConfigList[index].convertStatus==='finished':false)
                                     ?<div className="item-finish">
                                         <span className="finish-message">Finished</span>
                                         <div className="finish-btn">
@@ -254,7 +272,7 @@ const Upfile = () => {
                                                 {
                                                     finishDropDown 
                                                     ? (
-                                                        <BtnSizeContext.Provider value={{btnSize,btnList}}>
+                                                        <BtnSizeContext.Provider value={{btnSize,btnList,isUploadBtn:false}}>
                                                             <DropDownList /> 
                                                         </BtnSizeContext.Provider>
                                                     ) 
@@ -277,13 +295,13 @@ const Upfile = () => {
                         <div ref={leftBtn} className="more-content">
                             <span className="iconfont">&#xe664;</span>
                             添加更多文件
-                            <input ref={inputFile} className="hide" type="file" onChange={() => dispatch({type:UPLOAD_FILE,state:{fileList:[...state.fileList,inputFile.current.files[0]],uploaded:true}})} />
+                            <input ref={inputFile} className="hide" type="file" onChange={() => inputChange()} />
                         </div>
                         <span ref={rightBtn} className="iconfont more-options" onClick={(e) => dropDownClick(e)}>&#xe656;</span>
                             {
                                 dropDown 
                                 ? (
-                                    <BtnSizeContext.Provider value={{btnSize,btnList}}>
+                                    <BtnSizeContext.Provider value={{btnSize,btnList,inputChange,isUploadBtn:true}}>
                                         <DropDownList /> 
                                     </BtnSizeContext.Provider>
                                 ) 

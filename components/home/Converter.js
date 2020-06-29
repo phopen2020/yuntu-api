@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import DropDownMenu from '../../components/DropDownMenu'
+import DropDownMenu from '../DropDownMenu'
 import { newApiConfig } from '../../until/newApiConfig'
 import { ConfigContext, FileContext, GlobalContext } from '../../until/store/store'
 import Router, { withRouter } from 'next/router';

@@ -2,9 +2,13 @@ import React , { useRef, useContext, useEffect, useState } from 'react';
 import { FileContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext } from '../../until/store/store';
 import { fileUntils } from '../../until/fileUntils';
 import { newApiConfig } from '../../until/newApiConfig';
+import { uuidUntil } from '../../until/uuidUntil';
+import { uploadFile } from '../../until/uploadToOss'
 import DropDownList from '../DropDownList';
 import DropDownMenu from '../DropDownMenu';
 import Loading from '../Loading';
+import Fingerprint2 from 'fingerprintjs2';
+
 const Upfile = () => {
     const bgColor = "#f9f9f9";
     const fontColor = "#202020";
@@ -29,6 +33,7 @@ const Upfile = () => {
     const finishLeftBtn = useRef(null);
     const finishRightBtn = useRef(null);
     const [finishDropDown, setFinishDropDown] = useState(false);
+    const [token, setToken] = useState("");
     
     useEffect(()=>{
         if(!isShowDropDownMenu){
@@ -41,6 +46,7 @@ const Upfile = () => {
         }
     },[isShowDropDownMenu]);
     useEffect(()=>{
+        saveToken();
         if(state.fileList[0]){
             setFromType(fileUntils.getFileType(state.fileList[0].name).toUpperCase());
             dispatch({type:UPLOAD_FILE ,state:{fileList:state.fileList,fromType:fileUntils.getFileType(state.fileList[0].name).toUpperCase(),uploaded:true}});
@@ -55,6 +61,7 @@ const Upfile = () => {
                             toDropDown:false,
                             allowConfig:false,
                             convertStatus:'init',
+                            token:'',
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
@@ -67,6 +74,7 @@ const Upfile = () => {
                             toDropDown:false,
                             allowConfig:false,
                             convertStatus:'init',
+                            token:token,
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
@@ -81,7 +89,7 @@ const Upfile = () => {
                 fileConfigList[currentIndex].toType = toType;
                 fileConfigList[currentIndex].allowConfig = true;
                 fileConfigList[currentIndex].toDropDown = false;
-                setFileConfigList(fileConfigList);
+                setFileConfigList([...fileConfigList]);
                 fileConfigList.map((item)=>{
                     if(item.unknownType || item.toType==='' || !item.toType){
                         setOpacity(.65);
@@ -137,7 +145,25 @@ const Upfile = () => {
         }
     }
 
+    function saveToken() {
+        let token = '';
+        Fingerprint2.get(function(components){
+            let values = components.map(function (component) { return component.value })
+            let murmur = Fingerprint2.x64hash128(values.join(''), 31)
+            let tokenLen = 22;
+            let creatorUUID = uuidUntil.hash(murmur);
+            if (creatorUUID) {
+                tokenLen -= creatorUUID.length;
+            }
+            token = uuidUntil.uuid(tokenLen);
+            if (creatorUUID) {
+                token = creatorUUID + token;
+            }
+            setToken(token);
+        })
+    }
     function convertTo(){
+        
         if(opacity===1){
             fileConfigList.map((item,index)=>{
                 if(index===0){
@@ -155,9 +181,10 @@ const Upfile = () => {
                         setFileConfigList([...fileConfigList]);
                     },5000);
                 }
-                console.log(state.fileList);
-                console.log(fileConfigList);
             });
+            console.log(state.fileList[0]);
+            console.log(fileConfigList[0].token);
+            uploadFile.putObject(fileConfigList[0].token + '.source',state.fileList[0]);
         }
     }
     function convertSelect(index,e){

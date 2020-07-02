@@ -1,9 +1,7 @@
 import getSTS from './getSTS'
 let OSS = require('ali-oss');
 
-
-
-const putObject = (token,data)=> {
+const putObject = (token,data,callback)=> {
   getSTS(async (res)=>{
     let client = new OSS({
       // region以杭州为例（oss-cn-hangzhou），其他region按实际情况填写。
@@ -16,9 +14,10 @@ const putObject = (token,data)=> {
     });
   
     try {
-      // object-key可以自定义为文件名（例如file.txt）或目录（例如abc/test/file.txt）的形式，实现将文件上传至当前Bucket或Bucket下的指定目录。
       let result = await client.put('/source/'+token, data);
-      console.log(result);
+      if (callback) {
+        callback(result);
+      }
     } catch (e) {
       console.log(e);
     }

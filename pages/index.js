@@ -78,6 +78,7 @@ export default function Home() {
         
         /* custom */
         a{
+          color:#fff;
           text-decoration: none;
           -webkit-backface-visibility: hidden;
         }

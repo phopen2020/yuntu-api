@@ -72,6 +72,17 @@ function getFileType(fileTitle) {
     }
     return type;
 }
+
+function getFileName(text) {
+    const pattern = /\.{1}[a-z]{1,}$/;
+    if (pattern.exec(text) !== null) {
+        return (text.slice(0, pattern.exec(text).index));
+    } else {
+        return text;
+    }
+}
+
 export const fileUntils = {
-    getFileType
+    getFileType,
+    getFileName
 }

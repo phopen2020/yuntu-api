@@ -8,6 +8,8 @@ import DropDownList from '../DropDownList';
 import DropDownMenu from '../DropDownMenu';
 import Loading from '../Loading';
 import Fingerprint2 from 'fingerprintjs2';
+import { yuntuApi } from '../../until/yuntuApi';
+import WindowUtil from '../../until/WindowUtil';
 
 const Upfile = () => {
     const bgColor = "#f9f9f9";
@@ -34,6 +36,8 @@ const Upfile = () => {
     const finishRightBtn = useRef(null);
     const [finishDropDown, setFinishDropDown] = useState(false);
     const [token, setToken] = useState("");
+    const [downloadUrl, setDownloadUrl] = useState("");
+    const [downloadMethod,setDownloadMethod] = useState(null);
     
     useEffect(()=>{
         if(!isShowDropDownMenu){
@@ -101,6 +105,11 @@ const Upfile = () => {
             dispatch({type:UPLOAD_FILE,state:{fileList:state.fileList,fromType,toType:fileConfigList[0].toType,uploaded:true}});
         }
     },[toType]);
+    useEffect(()=>{
+        if(downloadUrl!==''){
+            setDownloadMethod(downloadMethodControl(downloadUrl));
+        }
+    },[downloadUrl]);
 
     if(!state.uploaded){
         return null;
@@ -165,7 +174,7 @@ const Upfile = () => {
     function convertTo(){
         
         if(opacity===1){
-            fileConfigList.map((item,index)=>{
+            /* fileConfigList.map((item,index)=>{
                 if(index===0){
                     item.convertStatus = 'waiting';
                     setFileConfigList([...fileConfigList]);
@@ -181,11 +190,76 @@ const Upfile = () => {
                         setFileConfigList([...fileConfigList]);
                     },5000);
                 }
-            });
+            }); */
             console.log(state.fileList[0]);
-            console.log(fileConfigList[0].token);
-            uploadFile.putObject(fileConfigList[0].token + '.source',state.fileList[0]);
+            console.log(fileConfigList[0]);
+            fileConfigList[0].convertStatus = 'waiting';
+            setFileConfigList([...fileConfigList]);
+            uploadFile.putObject(fileConfigList[0].token + '.source',state.fileList[0],function(res) {
+                console.log(res);
+                console.log(downloadUrl);
+                _convert();
+            });
         }
+    }
+    function _convert() {
+        const fileType = getConvertType();
+        yuntuApi.convert(fileConfigList[0].token, fileType, state.fileList[0].name, function (res) {
+
+            console.log(res);
+
+            if (res && res.json && res.json.retMsg == 'success') {
+                setDownloadUrl(res.json.outputURLs[0]);
+                fileConfigList[0].convertStatus = 'finished';
+                setFileConfigList([...fileConfigList]);
+            }
+        })
+        yuntuApi.convert(fileConfigList[0].token, fileType, state.fileList[0].name, function (res) {
+            console.log(res);
+          if (res && res.json && res.json.retCode == 0) {
+            setDownloadUrl(res.json.outputURLs[0]);
+            fileConfigList[0].convertStatus = 'finished';
+            setFileConfigList([...fileConfigList]);
+          } else if(res.json.retCode == 1) {
+              yuntuApi.queryState(fileConfigList[0].token, function (res) {
+                  console.log(res);
+                  if (res) {
+                    _getImgUrl(fileConfigList[0].token, fileType);
+                  }
+              })
+          }
+        })
+    }
+    function _getImgUrl(token,type) {
+        yuntuApi.getResult(token, type, function (res) {
+            console.log(res);
+            if (res && res.json && res.json.retMsg == 'success') {
+              setDownloadUrl(res.json.outputURLs[0]);
+              fileConfigList[0].convertStatus = 'finished';
+              setFileConfigList([...fileConfigList]);
+            }
+        })
+    }
+    function getConvertType(){
+        let type;
+        switch(fileConfigList[0].toType){
+            case "PDF":
+                type = "pdf";
+                break;
+            case "在线文档":
+                type = "webview";
+                break;
+            case "JPG":
+                type = "images";
+                break;
+            case "HTML5":
+                type = "html";
+                break;
+            default:
+                type = "webview";
+                break;
+        }
+        return type;
     }
     function convertSelect(index,e){
         e.stopPropagation();
@@ -243,6 +317,42 @@ const Upfile = () => {
         }
         setDropDown(false);
     }
+    function downloadMethodControl(url) {
+        let downloadMethod;
+        switch(fileConfigList[0].toType){
+            case "JPG":
+            case "PDF":
+                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                    <span className="iconfont">&#xe61a;</span>
+                                    <a href={url} download>下载</a>
+                                </div>);
+                break;
+            case "在线文档":
+                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                    <span className="iconfont">&#xe61a;</span>
+                                    <a href={url} target="_blank">查看</a>
+                                </div>);
+                break;
+            case "HTML5":
+                downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={()=>downloadHtml()}>
+                                    <span className="iconfont">&#xe61a;</span>
+                                    下载
+                                </div>);
+                break;
+            default:
+                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                    <span className="iconfont">&#xe61a;</span>
+                                    下載
+                                </div>);
+                break;
+        }
+        return downloadMethod;
+    }
+    function downloadHtml(){
+        let fileName =  fileUntils.getFileName(state.fileList[0].name);
+        fileName += '.html';
+        WindowUtil.saveDataToLocal(fileName, downloadUrl);
+    }
 
     return (
         <div className="container">
@@ -291,10 +401,7 @@ const Upfile = () => {
                                     ?<div className="item-finish">
                                         <span className="finish-message">Finished</span>
                                         <div className="finish-btn">
-                                            <div ref={finishLeftBtn} className="finish-content">
-                                                <span className="iconfont">&#xe61a;</span>
-                                                下载
-                                            </div>
+                                            {downloadMethod}
                                             <span ref={finishRightBtn} className="iconfont finish-options" onClick={(e)=>finishDropDownClick(e)}>&#xe656;</span>
                                                 {
                                                     finishDropDown 

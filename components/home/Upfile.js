@@ -10,6 +10,7 @@ import Loading from '../Loading';
 import Fingerprint2 from 'fingerprintjs2';
 import { yuntuApi } from '../../until/yuntuApi';
 import WindowUtil from '../../until/WindowUtil';
+import QRCode from 'qrcode.react'
 
 const Upfile = () => {
     const bgColor = "#f9f9f9";
@@ -28,7 +29,7 @@ const Upfile = () => {
     const [fromType, setFromType] = useState("");
     const [toType, setToType] = useState("");
     const [toList, setToList] = useState(null);
-    const [currentIndex,setCurrentIndex] = useState(-1);
+    const [currentIndex,setCurrentIndex] = useState(-1);   /* 正在进行操作的索引值 */
     const [opacity,setOpacity] = useState(0.65);
     const [fileConfigList,setFileConfigList] = useState([]);
     const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
@@ -36,8 +37,7 @@ const Upfile = () => {
     const finishRightBtn = useRef(null);
     const [finishDropDown, setFinishDropDown] = useState(false);
     const [token, setToken] = useState("");
-    const [downloadUrl, setDownloadUrl] = useState("");
-    const [downloadMethod,setDownloadMethod] = useState(null);
+    const [currentI,setCurrentI] = useState(-1); /* 正在转换所对应的索引值 */
     
     useEffect(()=>{
         if(!isShowDropDownMenu){
@@ -59,6 +59,7 @@ const Upfile = () => {
                     if(fileUntils.getFileType(item.name) === 'unknown'){
                         const fileConfig = {
                             id:index,
+                            name:item.name,
                             fromType:fileUntils.getFileType(item.name).toUpperCase(),
                             toType:'none',
                             unknownType:true,
@@ -66,12 +67,15 @@ const Upfile = () => {
                             allowConfig:false,
                             convertStatus:'init',
                             token:'',
+                            downloadUrl:'',
+                            downloadMethod:null,
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }else{
                         const fileConfig = {
                             id:index,
+                            name:item.name,
                             fromType:fileUntils.getFileType(item.name).toUpperCase(),
                             toType,
                             unknownType:false,
@@ -79,6 +83,8 @@ const Upfile = () => {
                             allowConfig:false,
                             convertStatus:'init',
                             token:token,
+                            downloadUrl:'',
+                            downloadMethod:null,
                             config:{}
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
@@ -106,10 +112,11 @@ const Upfile = () => {
         }
     },[toType]);
     useEffect(()=>{
-        if(downloadUrl!==''){
-            setDownloadMethod(downloadMethodControl(downloadUrl));
+        if(fileConfigList[currentI]){
+            fileConfigList[currentI].downloadMethod = downloadMethodControl(currentI);
+            setFileConfigList([...fileConfigList]);
         }
-    },[downloadUrl]);
+    },[currentI]);
 
     if(!state.uploaded){
         return null;
@@ -172,85 +179,55 @@ const Upfile = () => {
         })
     }
     function convertTo(){
-        
         if(opacity===1){
-            /* fileConfigList.map((item,index)=>{
-                if(index===0){
-                    item.convertStatus = 'waiting';
-                    setFileConfigList([...fileConfigList]);
-                    setTimeout(()=>{
-                        item.convertStatus = 'finished';
-                        setFileConfigList([...fileConfigList]);
-                    },2000);
-                }else if(index===1){
-                    item.convertStatus = 'waiting';
-                    setFileConfigList([...fileConfigList]);
-                    setTimeout(()=>{
-                        item.convertStatus = 'finished';
-                        setFileConfigList([...fileConfigList]);
-                    },5000);
-                }
-            }); */
-            console.log(state.fileList[0]);
-            console.log(fileConfigList[0]);
-            fileConfigList[0].convertStatus = 'waiting';
-            setFileConfigList([...fileConfigList]);
-            uploadFile.putObject(fileConfigList[0].token + '.source',state.fileList[0],function(res) {
-                console.log(res);
-                console.log(downloadUrl);
-                _convert();
-            });
-        }
-    }
-    function _convert() {
-        const fileType = getConvertType();
-        yuntuApi.convert(fileConfigList[0].token, fileType, state.fileList[0].name, function (res) {
-
-            console.log(res);
-
-            if (res && res.json && res.json.retMsg == 'success') {
-                setDownloadUrl(res.json.outputURLs[0]);
-                fileConfigList[0].convertStatus = 'finished';
+            for(let i in fileConfigList){
+                fileConfigList[i].convertStatus = 'waiting';
                 setFileConfigList([...fileConfigList]);
+                uploadFile.putObject(fileConfigList[i].token + '.source',state.fileList[i],function(res) {
+                    _convert(i);
+                });
             }
-        })
-        yuntuApi.convert(fileConfigList[0].token, fileType, state.fileList[0].name, function (res) {
-            console.log(res);
+        } 
+    }
+    function _convert(i) {
+        const fileType = getConvertType(i);
+        yuntuApi.convert(fileConfigList[i].token, fileType, state.fileList[i].name, function (res) {
           if (res && res.json && res.json.retCode == 0) {
-            setDownloadUrl(res.json.outputURLs[0]);
-            fileConfigList[0].convertStatus = 'finished';
+            setCurrentI(i);
+            fileConfigList[i].downloadUrl = res.json.outputURLs[0];
+            fileConfigList[i].convertStatus = 'finished';
             setFileConfigList([...fileConfigList]);
           } else if(res.json.retCode == 1) {
-              yuntuApi.queryState(fileConfigList[0].token, function (res) {
-                  console.log(res);
+              yuntuApi.queryState(fileConfigList[i].token, function (res) {
                   if (res) {
-                    _getImgUrl(fileConfigList[0].token, fileType);
+                    _getImgUrl(fileConfigList[i].token, fileType,i);
                   }
               })
           }
         })
     }
-    function _getImgUrl(token,type) {
+    function _getImgUrl(token,type,i) {
         yuntuApi.getResult(token, type, function (res) {
-            console.log(res);
             if (res && res.json && res.json.retMsg == 'success') {
-              setDownloadUrl(res.json.outputURLs[0]);
-              fileConfigList[0].convertStatus = 'finished';
+              setCurrentI(i);
+              fileConfigList[i].downloadUrl = res.json.outputURLs[0];
+              fileConfigList[i].convertStatus = 'finished';
               setFileConfigList([...fileConfigList]);
             }
         })
     }
-    function getConvertType(){
+    function getConvertType(i){
         let type;
-        switch(fileConfigList[0].toType){
+        switch(fileConfigList[i].toType){
             case "PDF":
                 type = "pdf";
                 break;
+            case "二维码":
             case "在线文档":
                 type = "webview";
                 break;
             case "JPG":
-                type = "images";
+                type = "longimage";
                 break;
             case "HTML5":
                 type = "html";
@@ -317,41 +294,70 @@ const Upfile = () => {
         }
         setDropDown(false);
     }
-    function downloadMethodControl(url) {
+    function downloadMethodControl(i) {
         let downloadMethod;
-        switch(fileConfigList[0].toType){
-            case "JPG":
-            case "PDF":
-                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
-                                    <span className="iconfont">&#xe61a;</span>
-                                    <a href={url} download>下载</a>
-                                </div>);
-                break;
-            case "在线文档":
-                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
-                                    <span className="iconfont">&#xe61a;</span>
-                                    <a href={url} target="_blank">查看</a>
-                                </div>);
-                break;
-            case "HTML5":
-                downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={()=>downloadHtml()}>
-                                    <span className="iconfont">&#xe61a;</span>
-                                    下载
-                                </div>);
-                break;
-            default:
-                downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
-                                    <span className="iconfont">&#xe61a;</span>
-                                    下載
-                                </div>);
-                break;
+        if(fileConfigList[i]){
+            switch(fileConfigList[i].toType){
+                case "JPG":
+                case "PDF":
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                        <span className="iconfont">&#xe61a;</span>
+                                        <a href={fileConfigList[i].downloadUrl} download={fileConfigList[i].name}>下载</a>
+                                    </div>);
+                    break;
+                case "在线文档":
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                        <span className="iconfont">&#xe61a;</span>
+                                        <a href={fileConfigList[i].downloadUrl} target="_blank">查看</a>
+                                    </div>);
+                    break;
+                case "HTML5":
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>downloadHtml(e)}>
+                                        <span className="iconfont">&#xe61a;</span>
+                                        下载
+                                    </div>);
+                    break;
+                case "二维码":
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>downloadQRCode(e)}>
+                                        <span className="iconfont">&#xe61a;</span>
+                                        <QRCode 
+                                        id="yuntu_qrcode"
+                                        value={fileConfigList[i].downloadUrl}
+                                        size={220}
+                                        style={Object.assign({},{"display":"none"})} 
+                                        />
+                                        下载
+                                    </div>);
+                    break;
+                default:
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                                        <span className="iconfont">&#xe61a;</span>
+                                        下载
+                                    </div>);
+                    break;
+            }
+            return downloadMethod;
         }
-        return downloadMethod;
     }
-    function downloadHtml(){
-        let fileName =  fileUntils.getFileName(state.fileList[0].name);
+    function downloadHtml(e){
+        e.stopPropagation();
+        handleOpenOne();
+        let fileName =  fileUntils.getFileName(state.fileList[currentI].name);
         fileName += '.html';
-        WindowUtil.saveDataToLocal(fileName, downloadUrl);
+        WindowUtil.saveDataToLocal(fileName, fileConfigList[currentI].downloadUrl);
+    }
+    function downloadQRCode(e){
+        e.stopPropagation();
+        handleOpenOne();
+        const Qr = document.getElementById('yuntu_qrcode');
+        let image = new Image();
+        image.src = Qr.toDataURL('image/png');
+        const a = document.createElement('a');
+        const event = new MouseEvent('click');
+        a.href = image.src;
+        const qrCodeName = fileUntils.getFileName(state.fileList[currentI].name);
+        a.download = qrCodeName + '.png';
+        a.dispatchEvent(event);
     }
 
     return (
@@ -401,7 +407,7 @@ const Upfile = () => {
                                     ?<div className="item-finish">
                                         <span className="finish-message">Finished</span>
                                         <div className="finish-btn">
-                                            {downloadMethod}
+                                            {fileConfigList[index]?fileConfigList[index].downloadMethod:null}
                                             <span ref={finishRightBtn} className="iconfont finish-options" onClick={(e)=>finishDropDownClick(e)}>&#xe656;</span>
                                                 {
                                                     finishDropDown 
@@ -486,6 +492,10 @@ const Upfile = () => {
                 }
                 .upfile-items .items-left p{
                     line-height:20px;
+                    text-overflow:ellipsis;
+                    overflow:hidden; 
+                    white-space:nowrap; 
+                    width:350px;
                 }
                 .upfile-items .items-center{
                     position:absolute;
@@ -626,7 +636,7 @@ const Upfile = () => {
                     position:relative;
                     padding:1rem 1.25rem;
                     font-size:1.25rem;
-                    line-height:25px;
+                    line-height:1.25;
                     border-radius:.27rem;
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;

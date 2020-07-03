@@ -4,7 +4,6 @@
 		axios.get(url)
   		.then(function (res) {
 		// handle success
-			console.log(res);
     		_export_raw(name, res);
   		})
   		.catch(function (error) {

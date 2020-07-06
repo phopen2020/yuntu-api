@@ -27,7 +27,7 @@ const Footer = () => {
         }
     ];
     return (
-        <div className="container">
+        <div className="container" id="footer-container">
             <footer>
                 <div className="footer-content">
                     <div className="content-nav">
@@ -54,6 +54,9 @@ const Footer = () => {
                 </div>
             </footer>
             <style jsx>{`
+                #footer-container{
+                    flex:1;
+                }
                 .container{
                     width:100%;
                     background:${bgColor};
@@ -107,7 +110,7 @@ const Footer = () => {
                     font-size:21px;
                 }
                 .footer-bottom p{
-                    margin:45px 0;
+                    margin:20px 0 30px 0;
                 }
             `}</style>
         </div>

@@ -16,7 +16,7 @@ export default function Home() {
     setIsShowDropDownMenu(true);
   }
   return (
-    <div className="container" onClick={()=>handleCloseAll()}>
+    <div className="container" id="index-container" onClick={()=>handleCloseAll()}>
       <Head>
         <title>九云图-API</title>
         <link rel="icon" href="/favicon.ico" />
@@ -30,6 +30,14 @@ export default function Home() {
         </File>
       </GlobalContext.Provider>
       <Footer />
+
+      <style jsx>{`
+        #index-container {
+          min-height:100vh;
+          display:flex;
+          flex-direction:column;
+        }
+      `}</style>
 
       <style jsx global>{`
         /**

@@ -12,7 +12,7 @@ const Introduce = () => {
     const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
     useEffect(()=>{
         if(!state.uploaded && state.fromType!==''){
-            Router.push('/');
+            Router.push('/home');
         }
     },[state.uploaded]);
     useEffect(()=>{

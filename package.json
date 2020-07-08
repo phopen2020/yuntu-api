@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "yarn build && next export"
+    "export": "yarn build && next export",
+    "server": "node server/server.js"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",

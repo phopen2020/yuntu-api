@@ -4,7 +4,7 @@ const Header = () => {
     const fontColor = "#fff";
 
     const logoClick = () => {
-        Router.push('/');
+        Router.push('/home');
     }
     const apiClick = () => {
         Router.push('/yuntuAPI');

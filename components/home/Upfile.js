@@ -27,7 +27,7 @@ const Upfile = () => {
     const leftBtn = useRef(null);
     const rightBtn = useRef(null);
     const [fromType, setFromType] = useState("");
-    const [toType, setToType] = useState("");
+    const [toType, setToType] = useState("在线文档");
     const [toList, setToList] = useState(null);
     const [currentIndex,setCurrentIndex] = useState(-1);   /* 正在进行操作的索引值 */
     const [opacity,setOpacity] = useState(0.65);
@@ -53,10 +53,24 @@ const Upfile = () => {
         saveToken();
         if(state.fileList[0]){
             setFromType(fileUntils.getFileType(state.fileList[0].name).toUpperCase());
-            dispatch({type:UPLOAD_FILE ,state:{fileList:state.fileList,fromType:fileUntils.getFileType(state.fileList[0].name).toUpperCase(),uploaded:true}});
+            dispatch({type:UPLOAD_FILE ,state:{fileList:state.fileList,fromType:fileUntils.getFileType(state.fileList[0].name).toUpperCase(),toType:"在线文档",uploaded:true}});
+            
+            /*
+             * 下面的数组遍历是为了在文件数量变更后判断能否转换
+             */
+            state.fileList.map((item)=>{
+                if(fileUntils.getFileType(item.name) === 'unknown'){
+                    setOpacity(.65);
+                }else{
+                    setOpacity(1);
+                }
+            })
+
+            /* 添加文件 */
             if(state.fileList.length>fileConfigList.length){
                 state.fileList.map((item,index)=>{
                     if(fileUntils.getFileType(item.name) === 'unknown'){
+                        setToType('none');
                         const fileConfig = {
                             id:index,
                             name:item.name,
@@ -64,12 +78,11 @@ const Upfile = () => {
                             toType:'none',
                             unknownType:true,
                             toDropDown:false,
-                            allowConfig:false,
+                            isOnlineDoc:false,
                             convertStatus:'init',
                             token:'',
                             downloadUrl:'',
-                            downloadMethod:null,
-                            config:{}
+                            downloadMethod:null
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }else{
@@ -77,15 +90,14 @@ const Upfile = () => {
                             id:index,
                             name:item.name,
                             fromType:fileUntils.getFileType(item.name).toUpperCase(),
-                            toType,
+                            toType:'在线文档',
                             unknownType:false,
                             toDropDown:false,
-                            allowConfig:false,
+                            isOnlineDoc:false,
                             convertStatus:'init',
                             token:token,
                             downloadUrl:'',
-                            downloadMethod:null,
-                            config:{}
+                            downloadMethod:null
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }
@@ -95,13 +107,13 @@ const Upfile = () => {
     },[state.fileList]);
     useEffect(()=>{
         if(state.uploaded){
-            if(toType){
+            if(toType && toType!=='none' && currentIndex!==-1){
                 fileConfigList[currentIndex].toType = toType;
                 fileConfigList[currentIndex].allowConfig = true;
                 fileConfigList[currentIndex].toDropDown = false;
                 setFileConfigList([...fileConfigList]);
                 fileConfigList.map((item)=>{
-                    if(item.unknownType || item.toType==='' || !item.toType){
+                    if(item.unknownType || !item.toType){
                         setOpacity(.65);
                     }else{
                         setOpacity(1);
@@ -300,13 +312,13 @@ const Upfile = () => {
             switch(fileConfigList[i].toType){
                 case "JPG":
                 case "PDF":
-                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
                                         <span className="iconfont">&#xe61a;</span>
                                         <a href={fileConfigList[i].downloadUrl} download={fileConfigList[i].name}>下载</a>
                                     </div>);
                     break;
                 case "在线文档":
-                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
                                         <span className="iconfont">&#xe61a;</span>
                                         <a href={fileConfigList[i].downloadUrl} target="_blank">查看</a>
                                     </div>);
@@ -330,7 +342,7 @@ const Upfile = () => {
                                     </div>);
                     break;
                 default:
-                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content">
+                    downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
                                         <span className="iconfont">&#xe61a;</span>
                                         下载
                                     </div>);

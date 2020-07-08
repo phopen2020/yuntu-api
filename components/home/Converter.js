@@ -39,8 +39,10 @@ const Converter = ({router}) => {
         }
     },[state.fromType]);
     useEffect(()=>{
-        if(state.toType){
-            setToType(state.toType);
+        if(state.toType && state.toType!=='none'){
+            if(state.fromType!=="UNKNOWN"){
+                setToType(state.toType);
+            }
         }
     },[state.toType]);
     useEffect(()=>{

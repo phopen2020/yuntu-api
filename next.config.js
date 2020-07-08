@@ -7,6 +7,9 @@ module.exports = {
   exportPathMap: async function (defaultPathMap) {
     return {
       '/': { page: '/' },
+      '/home': { page: '/home' },
+      '/yuntuAPI': { page: '/yuntuAPI' },
+      '/price': { page: '/price' },
       /* '/DOC': { page: '/', query: { finalType: 'DOC' } },
       '/PDF': { page: '/', query: { finalType: 'PDF' } },
       '/XLS': { page: '/', query: { finalType: 'XLS' } },

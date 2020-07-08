@@ -1,11 +1,22 @@
+import Router from 'next/router';
 const Header = () => {
     const bgColor = "#202020";
     const fontColor = "#fff";
+
+    const logoClick = () => {
+        Router.push('/');
+    }
+    const apiClick = () => {
+        Router.push('/yuntuAPI');
+    }
+    const priceClick = () => {
+        Router.push('/price');
+    }
     return (
         <div className="container">
             <header>
                 <div className="header-left">
-                    <a className="logo-area">
+                    <a className="logo-area" onClick={()=>logoClick()}>
                         <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
                         <h1>云转换</h1>
                     </a>
@@ -14,8 +25,8 @@ const Header = () => {
                     <nav>
                         <ul className="nav">
                             <li className="nav-items">工具类<span className="iconfont">&#xe656;</span></li>
-                            <li className="nav-items">API</li>
-                            <li className="nav-items">价钱</li>
+                            <li className="nav-items" onClick={()=>apiClick()}>API</li>
+                            <li className="nav-items" onClick={()=>priceClick()}>价钱</li>
                         </ul>
                     </nav>
                     <ul className="login-area">

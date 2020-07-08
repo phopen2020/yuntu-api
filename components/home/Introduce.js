@@ -11,7 +11,7 @@ const Introduce = () => {
     const rightBtn = useRef(null);
     const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
     useEffect(()=>{
-        if(!state.uploaded){
+        if(!state.uploaded && state.fromType!==''){
             Router.push('/');
         }
     },[state.uploaded]);

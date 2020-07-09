@@ -23,3 +23,4 @@ export const File = props => {
 export const BtnSizeContext = createContext({});
 export const ConfigContext = createContext({});
 export const GlobalContext = createContext({});
+export const ProgressContext = createContext({});

@@ -23,7 +23,6 @@ const multipartUpload  = (token,data,callback,progress)=> {
           }
         }
       });
-      console.log(result);
       if (callback) {
         callback(result);
       }

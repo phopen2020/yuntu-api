@@ -1,5 +1,5 @@
 import React , { useRef, useContext, useEffect, useState } from 'react';
-import { FileContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext } from '../../until/store/store';
+import { FileContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext, ProgressContext } from '../../until/store/store';
 import { fileUntils } from '../../until/fileUntils';
 import { newApiConfig } from '../../until/newApiConfig';
 import { uuidUntil } from '../../until/uuidUntil';
@@ -7,6 +7,7 @@ import { uploadFile } from '../../until/uploadToOss'
 import DropDownList from '../DropDownList';
 import DropDownMenu from '../DropDownMenu';
 import Loading from '../Loading';
+import Progress from '../Progress';
 import Fingerprint2 from 'fingerprintjs2';
 import { yuntuApi } from '../../until/yuntuApi';
 import WindowUtil from '../../until/WindowUtil';
@@ -38,6 +39,8 @@ const Upfile = () => {
     const [finishDropDown, setFinishDropDown] = useState(false);
     const [token, setToken] = useState("");
     const [currentI,setCurrentI] = useState(-1); /* 正在转换所对应的索引值 */
+    const [uploadPercentList,setUploadPercentList] = useState([]); 
+    const [uploadTextColorList,setUploadTextColorList] = useState([]); 
     
     useEffect(()=>{
         if(!isShowDropDownMenu){
@@ -82,7 +85,8 @@ const Upfile = () => {
                             convertStatus:'init',
                             token:'',
                             downloadUrl:'',
-                            downloadMethod:null
+                            downloadMethod:null,
+                            uploadPercent:0
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }else{
@@ -97,7 +101,8 @@ const Upfile = () => {
                             convertStatus:'init',
                             token:token,
                             downloadUrl:'',
-                            downloadMethod:null
+                            downloadMethod:null,
+                            uploadPercent:0
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }
@@ -193,12 +198,31 @@ const Upfile = () => {
     function convertTo(){
         if(opacity===1){
             for(let i in fileConfigList){
-                fileConfigList[i].convertStatus = 'waiting';
+                fileConfigList[i].convertStatus = 'uploading';
                 setFileConfigList([...fileConfigList]);
                 uploadFile.multipartUpload(fileConfigList[i].token + '.source',state.fileList[i],function(res) {
                     _convert(i);
                 }, (p)=>{
-                    console.log(p);
+                    
+                    /*
+                     * 设置每个进度条的百分比
+                     */
+                    uploadPercentList[i] = 100-parseInt(p);
+                    setUploadPercentList([...uploadPercentList]);
+
+                    /*
+                     * 设置每个进度条的字体颜色
+                     */
+                    uploadTextColorList[i] = "#ffc107";
+                    if(p>40){
+                        uploadTextColorList[i] = "#fff";
+                        setUploadTextColorList([...uploadTextColorList]);
+                    }
+
+                    if(p===100){
+                        fileConfigList[i].convertStatus = 'converting';
+                        setFileConfigList([...fileConfigList]);
+                    }
                 });
             }
         } 
@@ -412,7 +436,18 @@ const Upfile = () => {
                                     : null
                                 }
                                 {
-                                    (fileConfigList[index]?fileConfigList[index].convertStatus==='waiting':false)
+                                    (fileConfigList[index]?fileConfigList[index].convertStatus==='uploading':false)
+                                    ?(
+                                        <div className="item-wait"><span>Waiting</span>
+                                            <ProgressContext.Provider value={{uploadPercentList,uploadTextColorList,index}}>
+                                                <Progress />
+                                            </ProgressContext.Provider>
+                                        </div>
+                                    )
+                                    :null
+                                }
+                                {
+                                    (fileConfigList[index]?fileConfigList[index].convertStatus==='converting':false)
                                     ?<div className="item-wait"><span>Waiting</span><Loading /></div>
                                     :null
                                 }

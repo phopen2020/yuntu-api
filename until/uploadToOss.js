@@ -1,7 +1,7 @@
 import getSTS from './getSTS'
 let OSS = require('ali-oss');
 
-const putObject = (token,data,callback)=> {
+const multipartUpload  = (token,data,callback,progress)=> {
   getSTS(async (res)=>{
     let client = new OSS({
       // region以杭州为例（oss-cn-hangzhou），其他region按实际情况填写。
@@ -12,9 +12,18 @@ const putObject = (token,data,callback)=> {
       stsToken:res.SecurityToken,
       bucket: 'yuntu-resources'
     });
-  
+    let tempCheckpoint;
     try {
-      let result = await client.put('/source/'+token, data);
+      let result = await client.multipartUpload ('/source/'+token, data, {
+        progress: function (p, checkpoint) {
+          // 断点记录点。浏览器重启后无法直接继续上传，您需要手动触发上传操作。
+          tempCheckpoint = checkpoint;
+          if(progress){
+            progress(p*100);
+          }
+        }
+      });
+      console.log(result);
       if (callback) {
         callback(result);
       }
@@ -25,6 +34,6 @@ const putObject = (token,data,callback)=> {
 }
 
 export const uploadFile = {
-  putObject
+  multipartUpload
 }
 

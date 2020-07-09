@@ -195,8 +195,10 @@ const Upfile = () => {
             for(let i in fileConfigList){
                 fileConfigList[i].convertStatus = 'waiting';
                 setFileConfigList([...fileConfigList]);
-                uploadFile.putObject(fileConfigList[i].token + '.source',state.fileList[i],function(res) {
+                uploadFile.multipartUpload(fileConfigList[i].token + '.source',state.fileList[i],function(res) {
                     _convert(i);
+                }, (p)=>{
+                    console.log(p);
                 });
             }
         } 

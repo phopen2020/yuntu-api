@@ -25,7 +25,7 @@ const Progress = () => {
                     justify-content: center;
                     align-items: center;
                     top: 6%;
-                    right:-200%;
+                    right:-265%;
                 }
                 .progress{
                     position: relative;

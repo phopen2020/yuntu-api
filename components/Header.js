@@ -7,7 +7,7 @@ const Header = () => {
         Router.push('/home');
     }
     const apiClick = () => {
-        Router.push('/yuntuAPI');
+        Router.push('/api');
     }
     const priceClick = () => {
         Router.push('/price');
@@ -27,6 +27,7 @@ const Header = () => {
                             <li className="nav-items">工具类<span className="iconfont">&#xe656;</span></li>
                             <li className="nav-items" onClick={()=>apiClick()}>API</li>
                             <li className="nav-items" onClick={()=>priceClick()}>价钱</li>
+                            <li className="nav-items">新闻</li>
                         </ul>
                     </nav>
                     <ul className="login-area">
@@ -85,6 +86,7 @@ const Header = () => {
                     padding:27px 12px;
                     font-size:15px;
                     font-weight:600;
+                    cursor:pointer;
                 }
                 header .header-right nav .nav .nav-items span{
                     padding-left:3px;

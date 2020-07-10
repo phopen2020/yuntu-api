@@ -85,8 +85,7 @@ const Upfile = () => {
                             convertStatus:'init',
                             token:'',
                             downloadUrl:'',
-                            downloadMethod:null,
-                            uploadPercent:0
+                            downloadMethod:null
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }else{
@@ -101,8 +100,7 @@ const Upfile = () => {
                             convertStatus:'init',
                             token:token,
                             downloadUrl:'',
-                            downloadMethod:null,
-                            uploadPercent:0
+                            downloadMethod:null
                         }
                         setFileConfigList([...fileConfigList,fileConfig]);
                     }
@@ -345,8 +343,10 @@ const Upfile = () => {
                     break;
                 case "在线文档":
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
-                                        <span className="iconfont">&#xe61a;</span>
-                                        <a href={fileConfigList[i].downloadUrl} target="_blank">查看</a>
+                                        <span className="iconfont">&#xe65c;</span>
+
+                                        <a href={fileConfigList[i].downloadUrl} target="_blank">设置</a>
+
                                     </div>);
                     break;
                 case "HTML5":
@@ -424,11 +424,6 @@ const Upfile = () => {
                                             : null
                                         }
                                     </ConfigContext.Provider>
-                                    {
-                                        (fileConfigList[index]?fileConfigList[index].allowConfig:false)
-                                        ? <div className="center-set"><span className="iconfont">&#xe65c;</span></div>
-                                        : null
-                                    }
                                 </div>
                                 {
                                     (fileConfigList[index]?fileConfigList[index].unknownType:false)

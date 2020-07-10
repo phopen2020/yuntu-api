@@ -19,7 +19,7 @@ const Loading = () => (
                 width: 20px;
                 height: 20px;
                 position: absolute;
-                right:-200%;
+                right:-265%;
             }
             .roll>div {
                 width: 100%;

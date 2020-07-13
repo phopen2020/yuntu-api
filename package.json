@@ -12,6 +12,7 @@
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "ali-oss": "^6.9.1",
+    "antd": "^4.4.2",
     "axios": "^0.19.2",
     "fingerprintjs2": "^2.1.0",
     "next": "9.4.4",

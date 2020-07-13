@@ -69,6 +69,7 @@ const Header = () => {
                     font-size:1.6rem;
                     line-height:2.28rem;
                     padding:0 0 0 10px;
+                    color: #fff;
                     margin:0;
                 }
                 header .header-right{

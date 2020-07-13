@@ -99,3 +99,25 @@ display: none;
 }
  
  
+
+
+
+
+
+
+/*
+ * Reset antd
+ * Ensure CSS consistency
+ */
+html,body {
+    line-height: 1;
+}
+h1 {
+    margin: 0;
+    font-weight: 600;
+}
+*,
+*::before,
+*::after {
+    box-sizing: content-box;
+}

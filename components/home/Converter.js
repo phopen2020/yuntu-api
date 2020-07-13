@@ -154,6 +154,7 @@ const Converter = ({router}) => {
                 }
                 .converter-left h1{
                     padding:0 0 7.5px;
+                    color: #fff;
                     font-size:30px;
                 }
                 .converter-left p{

@@ -484,12 +484,12 @@ const Upfile = () => {
                 <div className="upfile-btn">
                     <div className="btn-more">
                         <div ref={leftBtn} className="more-content">
-                            <IconFont type="icon-tianjiawenjian" style={{ fontSize: 22, lineHeight: '25px', marginRight: '15px', verticalAlign: 'middle'}}/>
+                            <IconFont type="icon-tianjiawenjian" style={{ fontSize: 20, lineHeight: '25px', marginRight: '15px', verticalAlign: 'middle'}}/>
                             添加更多文件
                             <input ref={inputFile} className="hide" type="file" onChange={() => inputChange()} />
                         </div>
                         <span ref={rightBtn} className="more-options" onClick={(e) => dropDownClick(e)}>
-                            <IconFont type="icon-xiala" style={{fontSize: 22}}/>
+                            <IconFont type="icon-xiala" style={{fontSize: 26}}/>
                         </span>
                             {
                                 dropDown 
@@ -502,7 +502,7 @@ const Upfile = () => {
                             }
                     </div>
                     <div className="btn-convert" onClick={()=>convertTo()}>
-                        <IconFont type="icon-xunhuan" style={{ fontSize: 22, lineHeight: '22px', marginRight: '15px', verticalAlign: 'middle'}}/>
+                        <IconFont type="icon-xunhuan" style={{ fontSize: 20, lineHeight: '22px', marginRight: '15px', verticalAlign: 'middle'}}/>
                         转换
                     </div>
                 </div>
@@ -511,6 +511,7 @@ const Upfile = () => {
                 .container{
                     background:${bgColor};
                     color:${fontColor};
+                    line-height: 1;
                 }
                 .upfile{
                     width:1140px;
@@ -518,6 +519,11 @@ const Upfile = () => {
                     padding:27px;
                     margin-left:auto;
                     margin-right:auto;
+                }
+                .upfile-list{
+                    list-style: none;
+                    padding-left: 0;
+                    margin-bottom: 0;
                 }
                 .upfile-list .upfile-items{
                     position:relative;
@@ -544,6 +550,7 @@ const Upfile = () => {
                     overflow:hidden; 
                     white-space:nowrap; 
                     width:350px;
+                    margin-bottom: 0;
                 }
                 .upfile-items .items-center{
                     position:absolute;
@@ -677,29 +684,27 @@ const Upfile = () => {
                 }
                 .btn-more .more-content{
                     position:relative;
-                    padding:1rem 1.25rem;
-                    font-size:1.25rem;
-                    line-height:1.25;
+                    padding:0.9rem 1.24rem;
+                    line-height:1.24;
+                    font-size:18px;
                     border-radius:.27rem;
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
                     background:${btnColor[1]};
                 }
                 .more-content span{
-                    font-size:22px;
+                    font-size:20px;
                     margin:0 10px 0 0;
                 }
                 .more-content:hover{
                     background:#202020;
                 }
                 .btn-more .more-options{
-                    padding:1rem 1.25rem;
-                    line-height:1.25;
+                    padding:0.9rem 1rem;
+                    line-height: 1.24;
                     border-radius:.27rem;
                     border-top-left-radius:0;
                     border-bottom-left-radius:0;
-                    font-size:22px;
-                    font-weight:600;
                     background:${btnColor[1]};
                 }
                 .btn-more .more-options:hover{
@@ -726,7 +731,7 @@ const Upfile = () => {
                     position:absolute;
                     right:0;
                     top:0;
-                    width:172px;
+                    width:184px;
                     height:55px;
                     opacity: 0;
                     filter:alpha(opacity=0);

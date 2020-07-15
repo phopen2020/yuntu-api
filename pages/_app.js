@@ -1,5 +1,5 @@
 import App from 'next/app'
 
-import '../assets/reset.less'
+import 'antd/dist/antd.less'
 
 export default App

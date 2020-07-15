@@ -140,6 +140,7 @@ const Converter = ({router}) => {
                     color:${fontColor};
                     background-image: linear-gradient(45deg,${bgColor},#3a3a3a);
                     background-repeat: repeat-x;
+                    line-height: 1;
                 }
                 .converter{
                     display:flex;
@@ -158,10 +159,12 @@ const Converter = ({router}) => {
                     padding:0 0 7.5px;
                     color: #fff;
                     font-size:30px;
+                    margin-bottom: 0;
                 }
                 .converter-left p{
                     line-height:20px;
                     font-size:15px;
+                    margin-bottom: 0;
                 }
                 .converter-right{
                     display:flex;
@@ -172,6 +175,7 @@ const Converter = ({router}) => {
                 .converter-right .converter-control{
                     display:flex;
                     align-items:center;
+                    list-style: none;
                 }
                 .converter-control .control-items{
                     margin:5px;

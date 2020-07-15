@@ -138,6 +138,7 @@ const Introduce = () => {
                     width:100%;
                     background:${bgColor};
                     color:${fontColor};
+                    line-height: 1;
                 }
                 .introduce{
                     width:1140px;
@@ -150,14 +151,14 @@ const Introduce = () => {
                     position:relative;
                     display:flex;
                     justify-content:center;
-                    margin:0 0 22.5px;
+                    margin:0 0 20px;
                     font-size:18.75px;
                     color:#fff;
                 }
                 .introduce-upload .upload-btn{
                     position:relative;
-                    padding:1rem 1.25rem;
-                    font-size:1.25rem;
+                    padding:0.9rem 1.24rem;
+                    font-size:1.24rem;
                     line-height:25px;
                     border-radius:.27rem;
                     border-top-right-radius: 0;
@@ -174,8 +175,8 @@ const Introduce = () => {
                     border-color: #8e2c2a;
                 }
                 .introduce-upload .upload-options{
-                    padding: 1rem 1.25rem;
-                    line-height: 1.25;
+                    padding:0.9rem 1.24rem;
+                    line-height: 1.24;
                     border-radius: .27rem;
                     border-top-left-radius: 0;
                     border-bottom-left-radius: 0;
@@ -188,6 +189,9 @@ const Introduce = () => {
                     display:flex;
                     flex-wrap:wrap;
                     width:100%;
+                    list-style: none;
+                    padding-left: 0;
+                    margin-bottom: 0;
                 }
                 .content-list .content-items{
                     display:flex;
@@ -210,11 +214,13 @@ const Introduce = () => {
                 .items-right .items-title{
                     margin:0 0 7.5px;
                     font-size:1.51rem;
+                    font-weight: 600;
                 }
                 .items-right .items-text{
                     font-size:15px;
                     line-height:20px;
                     font-weight:400;
+                    margin-bottom: 0;
                 }
                 .items-right .items-text span{
                     color:${btnColor};
@@ -224,8 +230,8 @@ const Introduce = () => {
                     position:absolute;
                     right:0;
                     top:0;
-                    width:142px;
-                    height:55px;
+                    width:156px;
+                    height:56px;
                     opacity: 0;
                     filter:alpha(opacity=0);
                 }

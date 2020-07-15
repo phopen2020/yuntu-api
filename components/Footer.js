@@ -62,6 +62,7 @@ const Footer = () => {
                     width:100%;
                     background:${bgColor};
                     color:${fontColor};
+                    line-height: 1;
                 }
                 footer{
                     width:1140px;
@@ -79,9 +80,11 @@ const Footer = () => {
                     width:66.74rem;
                 }     
                 .content-nav .nav-list{
-                    width:90px;
+                    width:120px;
                     padding:0 15px;
                     margin:15px 10px 0 0;
+                    box-sizing: border-box;
+                    list-style: none;
                 }   
                 .content-nav .nav-list li{
                     padding:0 0 7.5px;
@@ -102,8 +105,12 @@ const Footer = () => {
                     line-height:20px;
                     padding:0 15px;
                 }
+                .content-mark .mark-1{
+                    margin-bottom: 0;
+                }
                 .content-mark .mark-2{
                     color:#a5a5a5;
+                    margin-bottom: 0;
                 }
                 .footer-bottom{
                     text-align:center;

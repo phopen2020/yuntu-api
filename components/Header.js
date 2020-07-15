@@ -45,14 +45,16 @@ const Header = () => {
                     color:${fontColor};
                     background-image: linear-gradient(45deg,${bgColor},#3a3a3a);
                     background-repeat: repeat-x;
+                    line-height: 1;
                 }
                 header{
                     display:flex;
                     justify-content:space-between;
                     aligh-items:center;
-                    width:1110px;
+                    width:1140px;
                     margin:0 auto;
                     padding:0 15px;
+                    box-sizing: border-box;
                 }
                 header .header-left{
                     width:13rem;
@@ -83,6 +85,8 @@ const Header = () => {
                 header .header-right nav .nav{
                     display:flex;
                     align-items:center;
+                    list-style: none;
+                    margin-bottom: 0;
                 }
                 header .header-right nav .nav .nav-items{
                     padding:27px 12px;
@@ -93,6 +97,8 @@ const Header = () => {
                 header .header-right .login-area{
                     display:flex;
                     align-items:center;
+                    list-style: none;
+                    margin-bottom: 0;
                 }
                 header .header-right .login-area .login-items{
                     padding:27px 12px;

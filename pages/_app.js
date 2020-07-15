@@ -1,8 +1,5 @@
-import 'antd/dist/antd.css';
-import '../public/css/reset.css';
-import '../public/css/iconfont.css';
+import App from 'next/app'
 
-// This default export is required in a new `pages/_app.js` file.
-export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
+import '../assets/reset.less'
+
+export default App

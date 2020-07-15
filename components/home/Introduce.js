@@ -2,6 +2,8 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import { FileContext, UPLOAD_FILE, BtnSizeContext, GlobalContext } from '../../until/store/store';
 import DropDownList from '../DropDownList';
 import Router from 'next/router';
+import IconFont from '../IconFont';
+
 const Introduce = () => {
     const { state, dispatch } = useContext(FileContext);
     const [btnSize, setBtnSize] = useState({});
@@ -34,28 +36,28 @@ const Introduce = () => {
     const introduceList = [
         {
             id:"01",
-            icon:"\ue617",
+            iconType:"icon-wendang",
             title:"支持+200格式",
             describe:"CloudConvert是您进行文件转换的瑞士军刀。我们确实支持几乎所有音频，视频，文档，电子书，档案，图像，电子表格或演示文稿格式。无需下载和安装任何软件。",
             link:""
         },
         {
             id:"02",
-            icon:"\ue627",
+            iconType:"icon-anquan",
             title:"数据安全",
             describe:"自2012年以来，CloudConvert受到我们用户和客户的信任。没有人可以访问您的文件。我们通过出售对我们API的访问权来赚钱，而不是通过出售您的数据来赚钱。",
             link:"隐私政策"
         },
         {
             id:"03",
-            icon:"\ue607",
+            iconType:"icon-view",
             title:"高品质转换",
             describe:"除了在后台使用开源软件之外，我们还与各种软件供应商合作，以提供最佳的结果。大多数转换类型都可以根据您的需要进行调整，例如设置质量和许多其他选项。",
             link:""
         },
         {
             id:"04",
-            icon:"\ue712",
+            iconType:"icon-apigatewayAPIwangguan-copy",
             title:"强大的API",
             describe:"我们的API允许与您的应用程序进行自定义集成。您只需为实际使用付费，大批量客户可获得大量折扣。我们确实提供了许多方便的功能，例如完整的Amazon S3集成。",
             link:"API文档"
@@ -64,12 +66,12 @@ const Introduce = () => {
     const btnList = [
         {
             id:"01",
-            icon:"\ue638",
+            iconType:"icon-wenjian",
             title:"从我的电脑"
         },
         {
             id:"02",
-            icon:"\ue79c",
+            iconType:"icon-url",
             title:"通过URL"
         }
     ]
@@ -98,11 +100,13 @@ const Introduce = () => {
             <section className="introduce">
                 <div className="introduce-upload">
                     <div ref={leftBtn} className="upload-btn">
-                        <span className="iconfont">&#xe664;</span>
+                        <IconFont type="icon-tianjiawenjian" style={{ fontSize: 22, lineHeight: '25px', marginRight: '15px', verticalAlign: 'middle'}}/>
                         选择文件
                         <input ref={inputFile} className="hide" type="file" onChange={() => inputChange()}/>
                     </div>
-                    <span ref={rightBtn} className="iconfont upload-options" onClick={(e) => dropDownClick(e)}>&#xe656;</span>
+                    <span ref={rightBtn} className="upload-options" onClick={(e) => dropDownClick(e)}>
+                        <IconFont type="icon-xiala" style={{fontSize: 22}}/>
+                    </span>
                         {
                             dropDown 
                             ? (
@@ -117,7 +121,9 @@ const Introduce = () => {
                     <ul className="content-list">
                         {introduceList.map((item)=>(
                             <li className="content-items" key={yuntu + namespace + item.id}>
-                                <span className="iconfont items-left">{item.icon}</span>
+                                <span className="items-left">
+                                    <IconFont type={item.iconType} />
+                                </span>
                                 <div className="items-right">
                                     <h1 className="items-title">{item.title}</h1>
                                     <p className="items-text">{item.describe}<span>{item.link}</span></p>
@@ -162,11 +168,6 @@ const Introduce = () => {
                 .introduce-upload .upload-btn:hover{
                     background-color: #982f2d;
                     border-color: #8e2c2a;
-                }
-                .introduce-upload .upload-btn span{
-                    font-size:22px;
-                    line-height:25px;
-                    margin-right:15px;
                 }
                 .introduce-upload .upload-options:hover{
                     background-color: #982f2d;

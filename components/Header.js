@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import IconFont from './IconFont';
 const Header = () => {
     const bgColor = "#202020";
     const fontColor = "#fff";
@@ -24,7 +25,7 @@ const Header = () => {
                 <div className="header-right">
                     <nav>
                         <ul className="nav">
-                            <li className="nav-items">工具类<span className="iconfont">&#xe656;</span></li>
+                            <li className="nav-items">工具类<IconFont type="icon-xiala" style={{fontSize: 15, marginLeft: '3px'}}/></li>
                             <li className="nav-items" onClick={()=>apiClick()}>API</li>
                             <li className="nav-items" onClick={()=>priceClick()}>价钱</li>
                             <li className="nav-items">新闻</li>
@@ -88,9 +89,6 @@ const Header = () => {
                     font-size:15px;
                     font-weight:600;
                     cursor:pointer;
-                }
-                header .header-right nav .nav .nav-items span{
-                    padding-left:3px;
                 }
                 header .header-right .login-area{
                     display:flex;

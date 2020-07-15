@@ -1,3 +1,4 @@
+import IconFont from './IconFont';
 const Footer = () => {
     const bgColor = "#f2f2f2";
     const fontColor = "#202020";
@@ -23,7 +24,7 @@ const Footer = () => {
         {
             column:"4",
             title:"联系",
-            childTitle:["联系我们","\ue61a"]
+            childTitle:["联系我们","icon"]
         }
     ];
     return (
@@ -37,7 +38,7 @@ const Footer = () => {
                                 <li>{item.title}</li>
                                 {
                                     item.childTitle.map((item,index)=>(
-                                        <li className="iconfont nav-items" key={yuntu + namespace + index + 'nav'}>{item}</li>
+                                        <li className="nav-items" key={yuntu + namespace + index + 'nav'}>{item==='icon'?<IconFont type='icon-yunduo'/>:item}</li>
                                     ))
                                 }
                             </ul>

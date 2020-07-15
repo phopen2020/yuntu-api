@@ -3,6 +3,8 @@ import DropDownMenu from '../DropDownMenu'
 import { newApiConfig } from '../../until/newApiConfig'
 import { ConfigContext, FileContext, GlobalContext } from '../../until/store/store'
 import Router, { withRouter } from 'next/router';
+import IconFont from '../IconFont';
+
 const Converter = ({router}) => {
     const bgColor = "#202020";
     const fontColor = "#fff";
@@ -46,7 +48,7 @@ const Converter = ({router}) => {
         }
     },[state.toType]);
     useEffect(()=>{
-        Router.push({pathname:'/',query:{finalType}},'/'+finalType);
+        Router.push({pathname:'/home',query:{finalType}},'/home/'+finalType);
     },[finalType])
     useEffect(()=>{
         if(router.query.finalType){
@@ -107,7 +109,7 @@ const Converter = ({router}) => {
                         <li className="control-items">转换</li>
                         <li className="control-items control-btn" onClick={(e)=>fromBtnClick(e)}>
                             {fromType ? fromType : "..."}
-                            <span className="iconfont">&#xe656;</span>
+                            <IconFont type="icon-xiala" style={{fontSize: 20, marginLeft: '3px'}}/>
                             <ConfigContext.Provider value={{fromList,type:'from',getType}}>
                             {
                                 fromDropDown
@@ -119,7 +121,7 @@ const Converter = ({router}) => {
                         <li className="control-items">至</li>
                         <li className="control-items control-btn" onClick={(e)=>toBtnClick(e)}>
                             {toType ? toType : "..."}
-                            <span className="iconfont">&#xe656;</span>
+                            <IconFont type="icon-xiala" style={{fontSize: 20, marginLeft: '3px'}}/>
                             <ConfigContext.Provider value={{toList,type:'to',getType}}>
                             {
                                 toDropDown
@@ -186,9 +188,6 @@ const Converter = ({router}) => {
                 }
                 .converter-control .control-items.control-btn:hover{
                     background:#1e1e1e;
-                }
-                .control-items.control-btn span{
-                    padding-left:3px;
                 }
             `}</style>
         </div>

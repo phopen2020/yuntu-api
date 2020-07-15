@@ -12,6 +12,7 @@ import Fingerprint2 from 'fingerprintjs2';
 import { yuntuApi } from '../../until/yuntuApi';
 import WindowUtil from '../../until/WindowUtil';
 import QRCode from 'qrcode.react'
+import IconFont from '../IconFont';
 
 const Upfile = () => {
     const bgColor = "#f9f9f9";
@@ -140,12 +141,12 @@ const Upfile = () => {
     const uploadBtnList = [
         {
             id:"01",
-            icon:"\ue638",
+            iconType:"icon-wenjian",
             title:"从我的电脑"
         },
         {
             id:"02",
-            icon:"\ue79c",
+            iconType:"icon-url",
             title:"通过URL"
         }
     ]
@@ -337,13 +338,13 @@ const Upfile = () => {
                 case "JPG":
                 case "PDF":
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
-                                        <span className="iconfont">&#xe61a;</span>
+                                        <IconFont type="icon-yunduo-copy" style={{fontSize: 18, marginRight: '15px'}}/>
                                         <a href={fileConfigList[i].downloadUrl} download={fileConfigList[i].name}>下载</a>
                                     </div>);
                     break;
                 case "在线文档":
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
-                                        <span className="iconfont">&#xe65c;</span>
+                                        <IconFont type="icon-banshou" style={{fontSize: 18, marginRight: '15px'}}/>
 
                                         <a href={fileConfigList[i].downloadUrl} target="_blank">设置</a>
 
@@ -351,13 +352,13 @@ const Upfile = () => {
                     break;
                 case "HTML5":
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>downloadHtml(e)}>
-                                        <span className="iconfont">&#xe61a;</span>
+                                        <IconFont type="icon-yunduo-copy" style={{fontSize: 18, marginRight: '15px'}}/>
                                         下载
                                     </div>);
                     break;
                 case "二维码":
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>downloadQRCode(e)}>
-                                        <span className="iconfont">&#xe61a;</span>
+                                        <IconFont type="icon-yunduo-copy" style={{fontSize: 18, marginRight: '15px'}}/>
                                         <QRCode 
                                         id="yuntu_qrcode"
                                         value={fileConfigList[i].downloadUrl}
@@ -369,7 +370,7 @@ const Upfile = () => {
                     break;
                 default:
                     downloadMethod = (<div ref={finishLeftBtn} className="finish-content" onClick={(e)=>e.stopPropagation()}>
-                                        <span className="iconfont">&#xe61a;</span>
+                                        <IconFont type="icon-yunduo-copy" style={{fontSize: 18, marginRight: '15px'}}/>
                                         下载
                                     </div>);
                     break;
@@ -407,15 +408,17 @@ const Upfile = () => {
                         ? state.fileList.map((item,index)=>(
                             <li className="upfile-items" key={yuntu + namespace + 'file' + index}>
                                 <div className="items-left">
-                                    <span className="iconfont">&#xe64e;</span>
+                                    <IconFont type="icon-doc-s" style={{fontSize:20,marginRight:"15px"}} />
                                     <p>{item.name}</p>
                                 </div>
                                 <div className="items-center">
-                                    <span className="iconfont center-icon">&#xe636;</span>
+                                    <span className="center-icon">
+                                        <IconFont type="icon-xunhuan" />
+                                    </span>
                                     转换为
                                     <div className="center-control" onClick={(e)=>convertSelect(index,e)}>
                                         {fileConfigList[index]?(fileConfigList[index].toType.length!==0?fileConfigList[index].toType:"..."):"..."}
-                                        <span className="iconfont">&#xe656;</span>
+                                        <IconFont type="icon-xiala" style={{fontSize:16,marginLeft:'5px'}} />
                                     </div>
                                     <ConfigContext.Provider value={{toList,type:'to',getType}}>
                                         {
@@ -452,7 +455,9 @@ const Upfile = () => {
                                         <span className="finish-message">Finished</span>
                                         <div className="finish-btn">
                                             {fileConfigList[index]?fileConfigList[index].downloadMethod:null}
-                                            <span ref={finishRightBtn} className="iconfont finish-options" onClick={(e)=>finishDropDownClick(e)}>&#xe656;</span>
+                                            <span ref={finishRightBtn} className="finish-options" onClick={(e)=>finishDropDownClick(e)}>
+                                                <IconFont type="icon-xiala" style={{fontSize: 20}}/>
+                                            </span>
                                                 {
                                                     finishDropDown 
                                                     ? (
@@ -467,7 +472,9 @@ const Upfile = () => {
                                     :null
                                 }
                                 <div className="items-right">
-                                    <span className="iconfont" onClick={()=>deleteClick(index)}>&#xe630;</span>
+                                    <span onClick={()=>deleteClick(index)}>
+                                        <IconFont type="icon-guanbi" />
+                                    </span>
                                 </div>
                             </li>
                         ))
@@ -477,11 +484,13 @@ const Upfile = () => {
                 <div className="upfile-btn">
                     <div className="btn-more">
                         <div ref={leftBtn} className="more-content">
-                            <span className="iconfont">&#xe664;</span>
+                            <IconFont type="icon-tianjiawenjian" style={{ fontSize: 22, lineHeight: '25px', marginRight: '15px', verticalAlign: 'middle'}}/>
                             添加更多文件
                             <input ref={inputFile} className="hide" type="file" onChange={() => inputChange()} />
                         </div>
-                        <span ref={rightBtn} className="iconfont more-options" onClick={(e) => dropDownClick(e)}>&#xe656;</span>
+                        <span ref={rightBtn} className="more-options" onClick={(e) => dropDownClick(e)}>
+                            <IconFont type="icon-xiala" style={{fontSize: 22}}/>
+                        </span>
                             {
                                 dropDown 
                                 ? (
@@ -493,7 +502,7 @@ const Upfile = () => {
                             }
                     </div>
                     <div className="btn-convert" onClick={()=>convertTo()}>
-                        <span className="iconfont">&#xe636;</span>
+                        <IconFont type="icon-xunhuan" style={{ fontSize: 22, lineHeight: '22px', marginRight: '15px', verticalAlign: 'middle'}}/>
                         转换
                     </div>
                 </div>
@@ -529,11 +538,6 @@ const Upfile = () => {
                     padding:15px;
                     font-size:15px;
                 }
-                .upfile-items .items-left span{
-                    margin:0 15px 0 0;
-                    font-size:20px;
-                    line-height:20px;
-                }
                 .upfile-items .items-left p{
                     line-height:20px;
                     text-overflow:ellipsis;
@@ -562,11 +566,6 @@ const Upfile = () => {
                     border:1px solid #5a5a5a;
                     border-radius:.25rem;
                     cursor:pointer;
-                }
-                .upfile-items .items-center .center-control span{
-                    margin:0 0 0 5px;
-                    font-size:15px;
-                    font-weight:600;
                 }
                 .upfile-items .items-center .center-set{
                     padding: .5rem .7rem;

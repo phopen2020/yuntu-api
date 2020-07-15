@@ -14,6 +14,8 @@ app.prepare().then(() => {
     
         if (pathname === '/') {
           app.render(req, res, '/home', query)
+        } else if (pathname === '/api'){
+          app.render(req, res, '/yuntuAPI', query)
         } else {
           handle(req, res, parsedUrl)
         }

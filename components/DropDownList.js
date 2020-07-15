@@ -1,5 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { BtnSizeContext } from '../until/store/store';
+import IconFont from './IconFont';
 const DropDownList = () => {
     const {btnSize,btnList,inputChange,isUploadBtn} = useContext(BtnSizeContext);
     const inputFile = useRef(null);
@@ -19,7 +20,9 @@ const DropDownList = () => {
             <ul className="list">
                 {btnList.map((item,index)=>(
                     <li className="list-items" key={yuntu + namespace + item.id + 'btnList'} onClick={(e)=>itemClick(index,e)}>
-                        <span className="iconfont items-icon">{item.icon}</span>
+                        <span className="items-icon">
+                            <IconFont type={item.iconType}/>
+                        </span>
                         {item.title}
                         {isUploadBtn&&index===0?<input ref={inputFile} className="hide" type="file" onChange={() => inputChange(inputFile.current.files[0])}/>:null}
                     </li>

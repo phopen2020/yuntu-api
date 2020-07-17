@@ -4,6 +4,7 @@ const {  Header, Sider } = Layout;
 const { SubMenu } = Menu;
 import { MenuOutlined, HomeFilled, CompassFilled } from '@ant-design/icons';
 import axios from 'axios';
+
 const Api = (data) => {
     const [api, setApi] = useState({});
     const [doc, setDoc] = useState([]);
@@ -13,11 +14,6 @@ const Api = (data) => {
 
     const bgColor = "#202020";
     const fontColor = "#fff";
-
-    Api.getInitialProps = async() => {
-        const res = await axios.get('http://localhost:3000/mock/apiData.json')
-        return res.data.data;
-    }
 
     useEffect(()=>{
         if(data.api){
@@ -389,4 +385,10 @@ const Api = (data) => {
         </div>
     )
 }
+
+Api.getInitialProps = async() => {
+    const res = await axios.get('http://localhost:3000/mock/apiData.json')
+    return res.data.data;
+}
+
 export default Api;

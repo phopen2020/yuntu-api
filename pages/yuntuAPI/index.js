@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { Layout, Menu, Row, Col, Card } from 'antd';
 const {  Header, Sider } = Layout;
 const { SubMenu } = Menu;
-import { MenuOutlined, HomeFilled } from '@ant-design/icons';
+import { MenuOutlined, HomeFilled, CompassFilled } from '@ant-design/icons';
 import axios from 'axios';
 const Api = (data) => {
     const [api, setApi] = useState({});
+    const [doc, setDoc] = useState([]);
     const [navList, setNavList] = useState([]);
+    const [openKeys, setOpenKeys] = useState(["总览"]);
+    const [rootSubmenuKeys,setRootSubmenuKeys] = useState([]);
 
     const bgColor = "#202020";
     const fontColor = "#fff";
@@ -19,24 +22,51 @@ const Api = (data) => {
     useEffect(()=>{
         if(data.api){
             setApi(data.api);
-            const overview = data.api.overview;
+            const apiList = data.api.apiList;
+            setDoc(apiList[0]);
             const navNameList = []; 
-            overview.overviewList.map((item)=>{
-                navNameList.push(item.nav);
+            let nav = {};
+            apiList.map((val,idx)=>{
+                rootSubmenuKeys[idx] = val.title;
+                setRootSubmenuKeys([...rootSubmenuKeys]);
+                if(navNameList.length===0){
+                    val.docList.map((item)=>{
+                        navNameList.push({nav:item.nav,position:item.description.position});
+                    }) 
+                }
+                nav = {
+                    title: val.title,
+                    docList: navNameList,
+                }
+                navList.push(nav);
             })
-            const nav = {
-                title: overview.title,
-                overviewList: navNameList,
-            }
-            setNavList([nav]);
+            setNavList([...navList]);
         }
     },[data]);
+
+    function onOpenChange(keys){
+        const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+        if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+            setOpenKeys(keys);
+        } else {
+            setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
+        }
+    }
+
+    function navClick(index){
+        if(api.apiList){
+            setDoc(api.apiList[index]);
+        }
+    }
 
     function getIcon(index){
         let icon;
         switch(index){
             case 0:
                 icon = <HomeFilled />;
+                break;
+            case 1:
+                icon = <CompassFilled />;
                 break;
             default:
                 icon = null;
@@ -101,6 +131,23 @@ const Api = (data) => {
         return false;
     }
 
+    function hasLevel3(content){
+        if(content.level3.isLevel3){
+
+        }else{
+            if(content.level3.tableList.length!==0){
+                let tableArea = content.level3.tableList.map((table,index)=>(
+                    <tr key={"table" + index + table.th} style={{width: '100%', fontSize:16, borderBottom: '1px solid rgba(0,0,0,0.03)'}}>
+                        <th style={{padding: '5px 20px'}}>{table.th}</th>
+                        <td style={{padding: '10px'}}>{table.td}</td>
+                    </tr>
+                ))
+                return tableArea;
+            }
+        }
+        return null;
+    }
+
     return (
         <div className="container">
             <Layout style={{height: '100%'}}>
@@ -138,7 +185,12 @@ const Api = (data) => {
                         </Row>
                     </div>
                     <Sider className="nav">
-                        <Menu mode="inline" style={{width:'260px'}}>
+                        <Menu 
+                            mode="inline"
+                            openKeys={openKeys} 
+                            onOpenChange={onOpenChange}
+                            style={{width:'260px'}}
+                        >
                             {
                                 navList.length!==0
                                 ?navList.map((menu,index)=>(
@@ -149,12 +201,13 @@ const Api = (data) => {
                                                 {
                                                     getIcon(index)
                                                 }
-                                                <span style={{paddingLeft:'15px'}}>{menu.title}</span>
+                                                <span style={{paddingLeft:'15px',fontSize:16}}>{menu.title}</span>
                                             </span>
                                         }
+                                        onTitleClick={()=>navClick(index)}
                                     >
                                         {
-                                            menu.overviewList.map((item)=><Menu.Item key={item} className="menu-items"><a>{item}</a></Menu.Item>)
+                                            menu.docList.map((item,index)=><Menu.Item key={item.nav + index} className="menu-items"><a href={item.position}>{item.nav}</a></Menu.Item>)
                                         }
                                     </SubMenu>
                                 ))
@@ -164,7 +217,7 @@ const Api = (data) => {
                     </Sider>
                     <div className="content">
                         {
-                            api.overview?api.overview.overviewList.map((item,index)=>(
+                            doc.length!==0?doc.docList.map((item,index)=>(
                                 <section className="content-block" id={item.description.position.replace('#','')} key={item.description.position + index}>
                                     <h1 style={{fontSize:index===0?30:22}}>{item.description.title}</h1>
                                     <Row>
@@ -183,6 +236,13 @@ const Api = (data) => {
                                                                     setContentMark(content)?setContentMark(content).map((p,index)=><p key={"contentMark"+index} dangerouslySetInnerHTML={{__html:p}}></p>):null 
                                                                 }
                                                             </div>
+                                                            <table className="content-table" style={{borderCollapse: 'collapse',width: '100%'}}>
+                                                                <tbody>
+                                                                    {
+                                                                        hasLevel3(content)
+                                                                    }
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                         )
                                                     )
@@ -191,7 +251,20 @@ const Api = (data) => {
                                             </Card>
                                         </Col>
                                         <Col span={12}>
-                                            <Card style={{backgroundColor:'#202020', marginLeft: '.8rem', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '.1rem'}}></Card>
+                                            <Card style={{backgroundColor:'#202020', marginLeft: '.8rem', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '.1rem', opacity: item.code.length!==0?1:0}}>
+                                                {
+                                                    item.code.length!==0
+                                                    ?item.code.map((code,index)=>(
+                                                        <div key={code+index+'code'} style={{marginBottom:'50px'}}>
+                                                            <h1 style={{color:'#ffffff',fontSize:18,marginBottom:'15px'}}>{code.title}</h1>
+                                                            {
+                                                                code.pre?code.pre.map((pre,index)=><pre key={pre+index+'pre'} style={{color:'#abb2bf'}}>{pre}</pre>):null
+                                                            }
+                                                        </div>
+                                                    ))
+                                                    :null
+                                                }
+                                            </Card>
                                         </Col>
                                     </Row>
                                 </section>

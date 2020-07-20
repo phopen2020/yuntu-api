@@ -11,8 +11,12 @@ app.prepare().then(() => {
         // This tells it to parse the query portion of the URL.
         const parsedUrl = parse(req.url, true)
         const { pathname, query } = parsedUrl
-    
-        if (pathname === '/') {
+        const reg = /^\/home\//
+        
+        if(pathname.match(reg)!==null){
+          /* let path = pathname.replace(reg,'')*/
+          app.render(req, res, '/home', query)
+        }else if (pathname === '/') {
           app.render(req, res, '/home', query)
         } else if (pathname === '/api'){
           app.render(req, res, '/yuntuAPI', query)

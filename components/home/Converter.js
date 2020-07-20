@@ -4,6 +4,7 @@ import { newApiConfig } from '../../until/newApiConfig'
 import { ConfigContext, YuntuContext, GlobalContext } from '../../store/store'
 import Router, { withRouter } from 'next/router';
 import IconFont from '../IconFont';
+import { route } from 'next/dist/next-server/server/router';
 
 const Converter = ({router}) => {
     const bgColor = "#202020";
@@ -48,11 +49,22 @@ const Converter = ({router}) => {
         }
     },[state.toType]);
     useEffect(()=>{
-        Router.push({pathname:'/home',query:{finalType}},'/home/'+finalType);
+        if(finalType!==''){
+            Router.push({pathname:'/home',query:{finalType}},'/home/'+finalType);
+        }
     },[finalType])
     useEffect(()=>{
+        console.log(router)
         if(router.query.finalType){
             const final = router.query.finalType.split('-');
+            setFromType(final[0]);
+            if(final[2]){
+                setToType(final[2]);
+            }
+        }
+        if(router.asPath.match('/home/')){
+            let params = decodeURI(router.asPath).replace('/home/','');
+            const final = params.split('-');
             setFromType(final[0]);
             if(final[2]){
                 setToType(final[2]);

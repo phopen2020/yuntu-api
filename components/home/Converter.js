@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import DropDownMenu from '../DropDownMenu'
 import { newApiConfig } from '../../until/newApiConfig'
-import { ConfigContext, FileContext, GlobalContext } from '../../until/store/store'
+import { ConfigContext, YuntuContext, GlobalContext } from '../../store/store'
 import Router, { withRouter } from 'next/router';
 import IconFont from '../IconFont';
 
@@ -19,7 +19,7 @@ const Converter = ({router}) => {
     const convertListInit = [
         {title:"文件转换",describe:"九云图是一个在线文件转换器。我们确实支持几乎所有文档，电子书，档案，图像，电子表格或演示文稿格式。要开始使用，请使用下面的按钮并选择要从您的计算机转换的文件。"}
     ]
-    const { state, dispatch } = useContext(FileContext);
+    const { state, dispatch } = useContext(YuntuContext);
     const [finalType,setFinalType] = useState('');
     const {isShowDropDownMenu,handleOpenOne} = useContext(GlobalContext);
 

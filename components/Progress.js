@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from 'react';
-import { ProgressContext } from '../until/store/store';
+import { ProgressContext } from '../store/store';
 const Progress = () => {
     const {uploadPercentList,uploadTextColorList,index} = useContext(ProgressContext);
     const block = useRef(null);

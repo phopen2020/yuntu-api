@@ -1,5 +1,5 @@
 import React , { useRef, useContext, useEffect, useState } from 'react';
-import { FileContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext, ProgressContext } from '../../until/store/store';
+import { YuntuContext, UPLOAD_FILE, BtnSizeContext, ConfigContext, GlobalContext, ProgressContext } from '../../store/store';
 import { fileUntils } from '../../until/fileUntils';
 import { newApiConfig } from '../../until/newApiConfig';
 import { uuidUntil } from '../../until/uuidUntil';
@@ -22,7 +22,7 @@ const Upfile = () => {
     const namespace = 'upfile';
 
     const inputFile = useRef(null);
-    const { state, dispatch } = useContext(FileContext);
+    const { state, dispatch } = useContext(YuntuContext);
     const [btnSize, setBtnSize] = useState({});   /* 上传按钮大小 */
     const [btnList, setBtnList] = useState([]);
     const [dropDown, setDropDown] = useState(false);
@@ -58,7 +58,6 @@ const Upfile = () => {
         if(state.fileList[0]){
             setFromType(fileUntils.getFileType(state.fileList[0].name).toUpperCase());
             dispatch({type:UPLOAD_FILE ,state:{fileList:state.fileList,fromType:fileUntils.getFileType(state.fileList[0].name).toUpperCase(),toType:"在线文档",uploaded:true}});
-            
             /*
              * 下面的数组遍历是为了在文件数量变更后判断能否转换
              */

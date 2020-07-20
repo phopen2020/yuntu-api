@@ -1,8 +1,17 @@
 import React, { createContext,useReducer } from 'react';
 
-export const FileContext = createContext({});
+export const YuntuContext = createContext({});
+
 export const UPLOAD_FILE = "UPLOAD_FILE";
+
+const initialState = {
+    fileList:[],
+    uploaded:false,
+    fromType:'',
+    toType:''
+}
 const reducer = (state,action)=>{
+    console.log(state,action)
     switch(action.type){
         case UPLOAD_FILE:
             return action.state;
@@ -10,12 +19,12 @@ const reducer = (state,action)=>{
             throw new Error();
     }
 }
-export const File = props => { 
-    const [state, dispatch] = useReducer(reducer,{fileList:[],uploaded:false,fromType:'',toType:''});
+export const Yuntu = props => { 
+    const [state, dispatch] = useReducer(reducer,initialState);
     return (
-        <FileContext.Provider value={{state,dispatch}}>
+        <YuntuContext.Provider value={{state,dispatch}}>
             {props.children}
-        </FileContext.Provider>
+        </YuntuContext.Provider>
     )
 }
 

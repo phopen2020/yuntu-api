@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { BtnSizeContext } from '../until/store/store';
+import { BtnSizeContext } from '../store/store';
 import IconFont from './IconFont';
 const DropDownList = () => {
     const {btnSize,btnList,inputChange,isUploadBtn} = useContext(BtnSizeContext);
@@ -41,6 +41,7 @@ const DropDownList = () => {
                     border-radius: .2rem;
                     font-weight: 500;
                     box-sizing:border-box;
+                    list-style: none;
                 }
                 .list-items{
                     padding:15px 20px 15px 55px;

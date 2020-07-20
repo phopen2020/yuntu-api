@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ConfigContext, GlobalContext } from '../until/store/store';
+import { ConfigContext, GlobalContext } from '../store/store';
 const DropDownMenu = () => {
     const menuList = useContext(ConfigContext);
     const [navType, setNavType] = useState("document");
@@ -78,6 +78,7 @@ const DropDownMenu = () => {
                 .menu-nav{
                     min-width:73px;
                     padding:0 10px;
+                    list-style: none;
                 }
                 .menu-nav .nav-items{
                     padding:10px 0;

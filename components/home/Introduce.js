@@ -1,11 +1,11 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { FileContext, UPLOAD_FILE, BtnSizeContext, GlobalContext } from '../../until/store/store';
+import { YuntuContext, UPLOAD_FILE, BtnSizeContext, GlobalContext } from '../../store/store';
 import DropDownList from '../DropDownList';
 import Router from 'next/router';
 import IconFont from '../IconFont';
 
 const Introduce = () => {
-    const { state, dispatch } = useContext(FileContext);
+    const { state, dispatch } = useContext(YuntuContext);
     const [btnSize, setBtnSize] = useState({});
     const [dropDown, setDropDown] = useState(false);
     const inputFile = useRef(null);

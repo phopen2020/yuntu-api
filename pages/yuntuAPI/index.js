@@ -334,6 +334,7 @@ const Api = (data) => {
                 }
                 .nav-items {
                     padding: 0 20px;
+                    cursor: pointer;
                 }
                 .header-login {
                     list-style: none;
@@ -344,6 +345,7 @@ const Api = (data) => {
                 .login-items {
                     padding: 0 20px;
                     font-size: 16px;
+                    cursor: pointer;
                 }
                 .nav {
                     position: fixed;

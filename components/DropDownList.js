@@ -17,14 +17,14 @@ const DropDownList = () => {
 
     return (
         <div className="container">
-            <ul className="list">
+            <ul className="list" style={{top:btnSize.height+"px",left:btnSize.left+"px",width:btnSize.width+"px"}}>
                 {btnList.map((item,index)=>(
                     <li className="list-items" key={yuntu + namespace + item.id + 'btnList'} onClick={(e)=>itemClick(index,e)}>
                         <span className="items-icon">
                             <IconFont type={item.iconType}/>
                         </span>
                         {item.title}
-                        {isUploadBtn&&index===0?<input ref={inputFile} className="hide" type="file" onChange={() => inputChange(inputFile.current.files[0])}/>:null}
+                        {isUploadBtn&&index===0?<input ref={inputFile} className="hide" style={{width:btnSize.width+"px"}} type="file" onChange={() => inputChange(inputFile.current.files[0])}/>:null}
                     </li>
                 ))}
             </ul>
@@ -32,9 +32,6 @@ const DropDownList = () => {
                 .list{
                     color:#5a5a5a;
                     position:absolute;
-                    top:${btnSize.height}px;
-                    left:${btnSize.left}px;
-                    width:${btnSize.width}px;
                     padding:10px 0;
                     background:#fff;
                     box-shadow: 0 1px 3px rgba(0,0,0,.1);
@@ -61,7 +58,6 @@ const DropDownList = () => {
                     position:absolute;
                     right:0;
                     top:10px;
-                    width:${btnSize.width}px;
                     height:44px;
                     opacity:0;
                     filter:alpha(opacity=0);

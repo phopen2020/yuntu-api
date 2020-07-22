@@ -304,6 +304,7 @@ const Upfile = () => {
         e.stopPropagation();
         handleOpenOne();
         setDropDown(!dropDown);
+        setFinishDropDown(false);
         setBtnList(uploadBtnList);
         setBtnSize({
             width: leftBtn.current.offsetWidth + rightBtn.current.offsetWidth,
@@ -315,6 +316,7 @@ const Upfile = () => {
         e.stopPropagation();
         handleOpenOne();
         setFinishDropDown(!finishDropDown);
+        setDropDown(false);
         setBtnList(finishBtnList);
         setBtnSize({
             width: finishLeftBtn.current.offsetWidth + finishRightBtn.current.offsetWidth,
@@ -650,6 +652,9 @@ const Upfile = () => {
                 .item-finish .finish-btn .finish-content span{
                     font-size:18px;
                     margin-right:15px;
+                }
+                .item-finish .finish-btn .finish-content a{
+                    color: #fff;
                 }
                 .item-finish .finish-btn .finish-options{
                     padding:.7rem .9rem;

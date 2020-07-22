@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Router from 'next/router';
 import { Layout, Menu, Row, Col, Card } from 'antd';
 const {  Header, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -14,6 +16,16 @@ const Api = (data) => {
 
     const bgColor = "#202020";
     const fontColor = "#fff";
+
+    const logoClick = () => {
+        Router.push('/home');
+    }
+    const apiClick = () => {
+        Router.push('/api');
+    }
+    const priceClick = () => {
+        Router.push('/price');
+    }
 
     useEffect(()=>{
         if(data.api){
@@ -146,9 +158,14 @@ const Api = (data) => {
 
     return (
         <div className="container">
+            <Head>
+                <title>九云图 - API文档</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            
             <Layout style={{height: '100%'}}>
                 <Header className="header" style={{color:fontColor,backgroundColor:bgColor}}>
-                    <div className="header-left">
+                    <div className="header-left" onClick={()=>logoClick()}>
                         <div className="header-logo">
                             <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
                         </div>
@@ -157,8 +174,8 @@ const Api = (data) => {
                     <div className="header-content">
                         <MenuOutlined className="header-icon" />
                         <ul className="header-nav">
-                            <li className="nav-items">API</li>
-                            <li className="nav-items">价钱</li>
+                            <li className="nav-items" onClick={()=>apiClick()}>API</li>
+                            <li className="nav-items" onClick={()=>priceClick()}>价钱</li>
                             <li className="nav-items">新闻</li>
                         </ul>
                     </div>
@@ -290,6 +307,11 @@ const Api = (data) => {
                     flex: 1;
                     display: flex;
                     align-items: center;
+                    font-weight: 600;
+                    font-size: 15px;
+                }
+                .header-right {
+                    font-weight: 600;
                 }
                 .header-logo img {
                     height: 32px;

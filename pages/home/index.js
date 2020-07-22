@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div className="container" id="index-container" onClick={()=>handleCloseAll()}>
       <Head>
-        <title>九云图-API</title>
+        <title>九云图 - 文档转换与发布平台</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       

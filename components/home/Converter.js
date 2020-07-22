@@ -54,7 +54,6 @@ const Converter = ({router}) => {
         }
     },[finalType])
     useEffect(()=>{
-        console.log(router)
         if(router.query.finalType){
             const final = router.query.finalType.split('-');
             setFromType(final[0]);

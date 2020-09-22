@@ -1,36 +1,25 @@
-import Router from 'next/router';
+import Link from 'next/link';
 import IconFont from './IconFont';
 const Header = () => {
     const bgColor = "#202020";
     const fontColor = "#fff";
-
-    const logoClick = e => {
-        e.stopPropagation();
-        Router.push('/home');
-    }
-    const apiClick = e => {
-        e.stopPropagation();
-        Router.push('/api');
-    }
-    const priceClick = e => {
-        e.stopPropagation();
-        Router.push('/price');
-    }
     return (
         <div className="container">
             <header>
                 <div className="header-left">
-                    <a className="logo-area" onClick={(e)=>logoClick(e)}>
-                        <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
-                        <h1>云转换</h1>
-                    </a>
+                    <Link href="/home">
+                        <a className="logo-area">
+                            <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
+                            <h1>云转换</h1>
+                        </a>
+                    </Link>
                 </div>
                 <div className="header-right">
                     <nav>
                         <ul className="nav">
                             <li className="nav-items">工具类<IconFont type="icon-xiala" style={{fontSize: 15, marginLeft: '3px'}}/></li>
-                            <li className="nav-items" onClick={(e)=>apiClick(e)}>API</li>
-                            <li className="nav-items" onClick={(e)=>priceClick(e)}>价钱</li>
+                            <li className="nav-items" ><Link href="/api"><a>API</a></Link></li>
+                            <li className="nav-items" ><Link href="/price"><a>价钱</a></Link></li>
                             <li className="nav-items">新闻</li>
                         </ul>
                     </nav>
@@ -96,6 +85,9 @@ const Header = () => {
                     font-size:15px;
                     font-weight:600;
                     cursor:pointer;
+                }
+                header .header-right nav .nav .nav-items a{
+                    color: #fff;
                 }
                 header .header-right .login-area{
                     display:flex;

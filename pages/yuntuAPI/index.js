@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Router from 'next/router';
+import Link from 'next/link';
 import { Layout, Menu, Row, Col, Card } from 'antd';
 const {  Header, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -16,16 +16,6 @@ const Api = (data) => {
 
     const bgColor = "#202020";
     const fontColor = "#fff";
-
-    const logoClick = () => {
-        Router.push('/home');
-    }
-    const apiClick = () => {
-        Router.push('/api');
-    }
-    const priceClick = () => {
-        Router.push('/price');
-    }
 
     useEffect(()=>{
         if(data.api){
@@ -165,17 +155,19 @@ const Api = (data) => {
             
             <Layout style={{height: '100%'}}>
                 <Header className="header" style={{color:fontColor,backgroundColor:bgColor}}>
-                    <div className="header-left" onClick={()=>logoClick()}>
-                        <div className="header-logo">
-                            <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
+                    <Link href="/home">
+                        <div className="header-left">
+                            <div className="header-logo">
+                                <img src="https://cloudconvert.com/images/logo_flat_110_borderless.png" />
+                            </div>
+                            <h2 className="header-text">cloudconvert</h2>
                         </div>
-                        <h2 className="header-text">cloudconvert</h2>
-                    </div>
+                    </Link>
                     <div className="header-content">
                         <MenuOutlined className="header-icon" />
                         <ul className="header-nav">
-                            <li className="nav-items" onClick={()=>apiClick()}>API</li>
-                            <li className="nav-items" onClick={()=>priceClick()}>价钱</li>
+                            <li className="nav-items"><Link href="/api"><a>API</a></Link></li>
+                            <li className="nav-items"><Link href="/price"><a>价钱</a></Link></li>
                             <li className="nav-items">新闻</li>
                         </ul>
                     </div>
@@ -335,6 +327,9 @@ const Api = (data) => {
                 .nav-items {
                     padding: 0 20px;
                     cursor: pointer;
+                }
+                .nav-items a {
+                    color: #fff;
                 }
                 .header-login {
                     list-style: none;
